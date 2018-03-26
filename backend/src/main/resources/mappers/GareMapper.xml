@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?><!DOCTYPE mapper	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="acambieri.sanbernardo.gestionegare.mapper.GareMapper">
+    <resultMap id="garaMap" type="acambieri.sanbernardo.gestionegare.model.Gara" autoMapping="true">
+        <id column="id" property="id"/>
+        <result column="anno_societario" property="annoSocietario"/>
+        <result column="completata" property="completata" typeHandler="acambieri.sanbernardo.gestionegare.mapper.type.SNBooleanTypeHandler"/>
+        <result column="punteggio_massimo" property="punteggioMassimo"/>
+        <collection property="tipiGara" select="tipiGaraSelect" column="id"/>
+        <collection property="divisioni" select="divisioniGaraSelect" column="id"/>
+    </resultMap>
+
+    <resultMap id="confGaraMap" type="acambieri.sanbernardo.gestionegare.model.ConfGara">
+        <id property="id" column="id"/>
+        <result column="gruppo" property="gruppo"/>
+        <result column="punteggio" property="punteggio"/>
+        <result column="escludi_classifica" property="escludiClassifica" typeHandler="acambieri.sanbernardo.gestionegare.mapper.type.SNBooleanTypeHandler" />
+        <association column="divisione" property="divisione" resultMap="divisioneMap" columnPrefix="div_"/>
+        <association property="gara"  column="id_gara" resultMap="garaMap" columnPrefix="gara_"/>
+        <association property="arciere" column="id_arciere" columnPrefix="arciere_" resultMap="arciereMap"/>
+    </resultMap>
+
+    <resultMap id="arciereMap" type="acambieri.sanbernardo.gestionegare.model.Arciere">
+        <id property="id" column="id"/>
+        <result property="nome" column="nome"/>
+        <result property="cognome" column="cognome"/>
+        <result property="sesso" column="sesso"/>
+    </resultMap>
+
+    <resultMap id="divisioneMap" type="acambieri.sanbernardo.gestionegare.model.Divisione">
+        <id property="id" column="id"/>
+        <result column="descrizione" property="descrizione"/>
+        <result column="DEFAULT_GROUP" property="defaultGroup" typeHandler="acambieri.sanbernardo.gestionegare.mapper.type.SNBooleanTypeHandler"/>
+        <result column="enabled" property="enabled" typeHandler="acambieri.sanbernardo.gestionegare.mapper.type.SNBooleanTypeHandler"/>
+    </resultMap>
+
+
+    <select id="tipiGaraSelect" resultType="acambieri.sanbernardo.gestionegare.model.TipoGara">
+        SELECT *
+        FROM GARE_TIPI_GARA,TIPI_GARA
+        WHERE GARE_TIPI_GARA.ID_TIPO = TIPI_GARA.ID
+        AND ID_GARA = #{id}
+    </select>
+
+    <select id="divisioniGaraSelect" resultType="acambieri.sanbernardo.gestionegare.model.Divisione" resultMap="divisioneMap">
+        SELECT DIVISIONI.*
+        FROM DIVISIONI_GARA,DIVISIONI
+        WHERE ID_GARA = #{id}
+        AND DIVISIONI.ID = ID_DIVISIONE
+    </select>
+</mapper>

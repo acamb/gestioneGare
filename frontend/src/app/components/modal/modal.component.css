@@ -1,0 +1,27 @@
+.mymodal {
+    position: fixed;
+    display: table-cell;
+    vertical-align: middle;
+    z-index: 2100;
+    overflow: auto;
+    width: 100%;
+}
+.mymodal-body {
+    padding: 20px;
+    background: #fff;
+    margin: 40px;
+    border-radius: 10px;
+}
+.mymodal-background {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #000;
+    opacity: 0.75;
+    z-index: 2000;
+}
+body.modal-open {
+    overflow: hidden;
+}

@@ -1,0 +1,25 @@
+/* You can add global styles to this file, and also import other style files */
+.button-right{
+  float: right;
+  margin-right:10px;
+}
+.dont-show{
+  visibility: hidden;
+}
+@media(min-width: 1024px){
+.stick {
+  visibility: visible!important;
+  position: fixed !important;
+  top: 55px !important;
+  left: 10px !important;
+  background: white;
+  z-index: 9999 !important;
+}
+}
+
+@media print {
+  @import url('../node_modules/bootstrap/dist/css/bootstrap.min.css');
+  .print-hidden{
+    display: none !important;
+  }
+}

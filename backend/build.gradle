@@ -1,0 +1,110 @@
+
+
+buildscript {
+    ext.environment="test"
+    ext.kotlin_version = '1.1.60'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.0.0.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: "kotlin"
+apply plugin: "spring-boot"
+
+loadConfiguration()
+def environment=ext.environment
+
+group = 'acambieri.sanbernardo'
+version = '1.2'
+
+description = """gestionegare"""
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+
+def loadConfiguration() {
+    ext.environment = hasProperty('env') ? env : 'test'
+    println "Env: $environment"
+}
+
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+task renameResources(type: Copy) {
+    from "build/resources/main"
+    into "build/resources/main"
+    include "**/*_$environment*"
+    rename {
+        String name ->
+            name.replace("_$environment","")
+    }
+    doLast{
+        println("renamed _$environment files.")
+    }
+}
+
+task dist(){
+
+}
+
+task compileFrontend(type: Exec) {
+    workingDir '../frontend'
+    commandLine 'cmd','/c','npm','run',"package_$environment"
+}
+//TODO[AC] renameResources viene eseguito troppo tardi
+/*build.dependsOn renameResources
+processResources.dependsOn compileFrontend
+renameResources.mustRunAfter processResources*/
+jar.dependsOn renameResources
+renameResources.dependsOn processResources
+
+dist.dependsOn compileJava,compileKotlin,compileFrontend,processResources,renameResources,build
+
+gradle.taskGraph.whenReady {
+    def versionPropsFile = file('version.properties')
+    if (versionPropsFile.canRead()) {
+        def Properties versionProps = new Properties()
+        versionProps.load(new FileInputStream(versionPropsFile))
+        def versionMin=Integer.parseInt(versionProps['version']);
+        if(environment.equals("prod")){
+            versionMin++;
+            versionProps['version']=String.valueOf(versionMin);
+            versionProps.store(new FileWriter(versionPropsFile),"")
+        }
+        version+="."+versionMin
+    }
+    println "Current version: $version"
+
+}
+
+
+
+repositories {
+
+     maven { url "https://repo.spring.io/snapshot" }
+     maven { url "https://repo.spring.io/milestone" }
+     maven { url "http://repo.maven.apache.org/maven2" }
+}
+dependencies {
+    compile group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version:'1.3.1'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:'2.0.0.M4'
+    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jre8', version:'1.1.60'
+    compile group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version:'1.1.60'
+    compile group: 'com.h2database', name: 'h2', version:'1.4.196'
+    compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.20'
+    compile group: 'org.mybatis', name: 'mybatis', version:'3.4.4'
+    compile group: 'org.springframework', name: 'spring-context-support', version:'5.0.0.RC4'
+    runtime group: 'org.springframework.boot', name: 'spring-boot-devtools', version:'2.0.0.M4'
+    testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version:'2.0.0.M4') {
+exclude(module: 'commons-logging')
+    }
+}

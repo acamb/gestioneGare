@@ -1,0 +1,1 @@
+alter table conf_gara add column escludi_classifica varchar(1);
