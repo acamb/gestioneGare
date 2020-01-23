@@ -59,6 +59,7 @@
   <button type="button" class="btn btn-success" (click)="salva()"
           [disabled]="(!garaForm.form.valid) || saving">Salva
   </button>
+  <app-back-button ></app-back-button>
 </form>
 <data-table class="dont-show" [styckyOnScroll]="150" [data]="garaDaEditare.divisioni" [headers]="headersDivisioni"
             [itemsPerPage]="5" [selectable]="!edit" [selectKey]="'elimina'"

@@ -40,6 +40,7 @@ import { ArcieriPickerComponent } from './components/arcieri-picker/arcieri-pick
 import { CreazioneGruppiComponent } from './components/creazione-gruppi/creazione-gruppi.component';
 import { ExtensibleDataTableComponent } from './components/extensible-data-table/extensible-data-table.component';
 import { GironiComponent } from './components/gironi/gironi.component';
+import { BackButtonComponent } from './components/back-button/back-button.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: Http) {
@@ -71,7 +72,8 @@ export function HttpLoaderFactory(http: Http) {
     ArcieriPickerComponent,
     CreazioneGruppiComponent,
     ExtensibleDataTableComponent,
-    GironiComponent
+    GironiComponent,
+    BackButtonComponent
   ],
   imports: [
     BrowserModule,
