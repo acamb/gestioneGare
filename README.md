@@ -1,5 +1,5 @@
 # gestioneGare
-
+This software is licensed under MIT license.
 
 ## Description and warnings
 I wrote this software for my local archery club to manage our members-only competitions and tournaments.
