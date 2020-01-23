@@ -11,7 +11,7 @@ As i wrote this in my spare time and only for my archery coach, currently there 
 maybe some day i will extract some components as a reusable module in a separate project.
 
 ## Project structure
-This is a spring boot application + angular 2 that uses myBatis over an embedded H2 database.
+This is a spring boot application + angular 2 that uses Spring Data JPA over an embedded H2 database.
 
 ### Profiles and builds
 Install frontend dependencies running `npm install` in the frontend/ directory.
