@@ -1,0 +1,18 @@
+<div>
+  <span><label>Anno societario</label>
+  </span>
+  <span>
+    <input class="form-control" type="number" required [(ngModel)]="annoSocietario"
+           name="anno" min="2018" AnnoValidator/>
+  </span>
+</div>
+<div >
+  <data-table [selectable]="true"
+              [data]="gare | async"
+              [selectKey]="'duplica'"
+              (rowSelected)="onGaraSelected($event)"
+              [headers]="{nome: 'Nome'}"
+              [paginated]="true"
+              [itemsPerPage]="5"
+  ></data-table>
+</div>

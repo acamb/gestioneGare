@@ -1,0 +1,18 @@
+
+<h3>Classifica {{descrizione}}</h3>
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th></th><th>Cognome</th><th>Nome</th><th>Punti</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let arciere of gruppoVal">
+    <td><b>{{gruppoVal.indexOf(arciere)+1}}</b></td>
+      <td>{{arciere.cognome}}</td>
+    <td>{{arciere.nome}}</td>
+    <td *ngIf="canModify"><input type="number" [(ngModel)]="arciere.punteggio" (change)="propagate()" /></td>
+    <td *ngIf="!canModify">{{arciere.punteggio}}</td>
+  </tr>
+  </tbody>
+</table>

@@ -1,0 +1,59 @@
+<ng-template #itemTemplateA let-item="item" let-index="index">
+  <div class="arciereItem">
+    <span>{{item.value.nome}} {{item.value.cognome}}</span>
+    <span class="pull-right">
+    <button *ngFor="let divisione of divisioni" (click)="cambiaDivisione(item.value,divisione)" class="btn btn-xs" [ngClass]="(item.value.divisione?.id === divisione.id) ? 'btn-primary' : 'btn-default'">{{divisioni.indexOf(divisione)+1}}</button>
+    <button class="btn btn-xs btn-danger " (click)="eliminaA(item)">X</button>
+    </span>
+  </div>
+</ng-template>
+<ng-template #itemTemplateB let-item="item" let-index="index">
+  <div class="arciereItem">
+    <span>{{item.value.nome}} {{item.value.cognome}}</span>
+    <!--<button (click)="toogleGruppoG(item.value)" class="btn btn-xs rounded" [ngClass]="(item.value.escludiClassifica) ? 'btn-warning' : 'btn-default'">G</button>-->
+    <span class="pull-right">
+    <button *ngFor="let divisione of divisioni" (click)="cambiaDivisione(item.value,divisione)" class="btn btn-xs" [ngClass]="(item.value.divisione?.id === divisione.id) ? 'btn-primary' : 'btn-default'">{{divisioni.indexOf(divisione)+1}}</button>
+    <button class="btn btn-xs btn-danger " (click)="eliminaB(item)">X</button>
+    </span>
+  </div>
+</ng-template>
+<br/>
+<br/>
+<div class="row">
+
+  <div class="col-xs-6 col-md-6  panel panel-default gruppoContainer" >
+    Gruppo {{gruppoUnoLabel}}
+    <bs-sortable
+      #gruppoUnoComponent
+      [(ngModel)]="gruppoUno"
+      [itemTemplate]="itemTemplateA"
+      itemClass="sortable-item"
+      itemActiveClass="sortable-item-active"
+      placeholderItem="Drag here"
+      placeholderClass="placeholderStyle"
+      wrapperClass="sortable-wrapper"
+      (onChange)="onChangeGruppo()"
+    ></bs-sortable>
+  </div>
+  <div class="col-xs-6 col-md-6 panel panel-default gruppoContainer"  >
+    Gruppo {{gruppoDueLabel}}
+    <bs-sortable
+      #gruppoDueComponent
+      [(ngModel)]="gruppoDue"
+      itemClass="sortable-item"
+      [itemTemplate]="itemTemplateB"
+      itemActiveClass="sortable-item-active"
+      placeholderItem="Drag here"
+      placeholderClass="sortable-item"
+      wrapperClass="sortable-wrapper"
+      (onChange)="onChangeGruppo()"
+    ></bs-sortable>
+  </div>
+
+
+</div>
+
+<!--<div class="row" *ngIf="salvaVisible">
+  <div class="col-md-10"></div>
+  <div class="col-md-2"><button class="btn btn-success" (click)="save()">Salva gruppi</button></div>
+</div>-->

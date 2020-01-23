@@ -1,0 +1,47 @@
+
+<br/>
+<br/>
+<div class="row" *ngIf="numeroCoppie == 1">
+  <app-gruppi #gruppo
+    [gruppoUnoLabel]="'A'"
+    [gruppoDueLabel]="'B'"
+    [gruppoUno]="gara.gruppoA1"
+    [gruppoDue]="gara.gruppoB1"
+    [divisioni]="divisioni"
+    (valueChangedEmitter)="gruppiChanged($event)"
+  ></app-gruppi>
+
+</div>
+
+<div class="row" *ngIf="numeroCoppie == 2">
+  <app-gruppi #gruppo1
+    [gruppoUnoLabel]="'A1'"
+    [gruppoDueLabel]="'A2'"
+    [gruppoUno]="gara.gruppoA1"
+    [gruppoDue]="gara.gruppoA2"
+    [divisioni]="divisioni"
+    (valueChangedEmitter)="gruppiAChanged($event)"
+  ></app-gruppi>
+  <app-gruppi #gruppo2
+    [gruppoUnoLabel]="'B1'"
+    [gruppoDueLabel]="'B2'"
+    [gruppoUno]="gara.gruppoB1"
+    [gruppoDue]="gara.gruppoB2"
+    [divisioni]="divisioni"
+    (valueChangedEmitter)="gruppiBChanged($event)"
+  ></app-gruppi>
+</div>
+<app-arcieri-picker
+  [numGruppi]="numeroCoppie"
+  [canBeSelectedFunction]="getCanBeSelectedFunction()"
+  [arcieri]="arcieri | async"
+  (addToA1)="addToA1($event)"
+  (addToA2)="addToA2($event)"
+  (addToB1)="addToB1($event)"
+  (addToB2)="addToB2($event)">
+</app-arcieri-picker>
+
+<!--<div class="row" *ngIf="salvaVisible">
+  <div class="col-md-10"></div>
+  <div class="col-md-2"><button class="btn btn-success" (click)="save()">Salva gruppi</button></div>
+</div>-->

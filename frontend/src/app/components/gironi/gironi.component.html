@@ -1,0 +1,22 @@
+<div *ngFor="let gironeItem of [{girone: gironeA1, title: 'Girone A1'},
+                                {girone: gironeA2, title: 'Girone A2'},
+                                {girone: gironeB1, title: 'Girone B1'},
+                                {girone: gironeB2, title: 'Girone B2'}]">
+  <div class="row" *ngIf="gironeItem.girone">
+    <div class="col-md-12 ">
+      <h2>{{gironeItem.title}}</h2>
+    </div>
+
+    <div>
+      <div  *ngFor="let turno of gironeItem.girone">
+        <div><label colspan="2">Turno {{gironeItem.girone.indexOf(turno)+1}}</label></div>
+        <div *ngFor="let scontro of turno.scontri">
+          <span>{{scontro.arciereUno.nome}} {{scontro.arciereUno.cognome}}</span>
+          <span>&nbsp;-&nbsp;</span>
+          <span>{{scontro.arciereDue.nome}} {{scontro.arciereDue.cognome}}</span>
+        </div>
+        <br/>
+      </div>
+    </div>
+  </div>
+</div>

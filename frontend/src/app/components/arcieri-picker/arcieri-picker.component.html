@@ -1,0 +1,47 @@
+<ng-template #itemTemplate let-item="item">
+  <button class="btn btn-primary btn-sm"  [disabled]="! canBeSelectedFunction(item)" (click)="addA1(item)">{{getLabel('A1')}}</button>
+  <button class="btn btn-primary btn-sm"  [disabled]="! canBeSelectedFunction(item)" (click)="addB1(item)">{{getLabel('B1')}}</button>
+
+  <span *ngIf="numGruppi > 1">
+  <button class="btn btn-primary btn-sm"  [disabled]="! canBeSelectedFunction(item)" (click)="addA2(item)">{{getLabel('A2')}}</button>
+    <button class="btn btn-primary btn-sm"  [disabled]="! canBeSelectedFunction(item)" (click)="addB2(item)">{{getLabel('B2')}}</button>
+  </span>
+</ng-template>
+<div class="row">
+  <div class="col-xs-3 col-md-3">
+    Filtro
+  </div>
+  <div class="col-xs-9 col-md-9">
+    <input class="form-control" [(ngModel)]="arcieriFilter" (input)="filterChanged($event.target.value)"/>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-2 col-md-2"></div>
+  <div class="col-xs-8 col-md-8">
+    Arcieri:
+    <!--<table class="table table-striped">
+      <tr *ngFor="let arciere of arcieri">
+        <td>
+          <span>{{arciere.nome}} {{arciere.cognome}}</span>
+        </td>
+        <td>
+          <button class="btn btn-xs btn-primary" [disabled]="arciere.currentGroup != undefined" (click)="addA(arciere)">gruppo A</button>
+        </td>
+        <td>
+          <button class="btn btn-xs btn-primary" [disabled]="arciere.currentGroup != undefined" (click)="addB(arciere)">gruppo B</button>
+        </td>
+      </tr>
+    </table>-->
+    <app-extensible-data-table
+                [selectable]="true"
+                [headers]="{nome: 'Nome',cognome: 'Cognome'}"
+                [data]="arcieriSubject | async"
+                [paginated]="true"
+                [selectKey]="'gruppo A'"
+                [selectKey2]="'gruppo B'"
+                [getDisplayValue]="getDisplayValue()"
+                [itemTemplate]="itemTemplate"
+    >
+    </app-extensible-data-table>
+  </div>
+</div>

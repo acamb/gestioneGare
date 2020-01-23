@@ -1,0 +1,43 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Gestione Gare San Bernardo</a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div id="navbar1" class="collapse navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Home</a></li>
+        <li><a routerLink="/gestioneGare" routerLinkActive="activeRoute">Gestione gare</a></li>
+        <li><a routerLink="/torneoIndoor" routerLinkActive="activeRoute">Torneo Indoor</a></li>
+        <li><a routerLink="/fiocchi" routerLinkActive="activeRoute">Fiocchi</a></li>
+        <li><a routerLink="/scontri" routerLinkActive="activeRoute">Scontri</a></li>
+        <li><a routerLink="/divisioni" routerLinkActive="activeRoute">Gestione divisioni</a></li>
+        <li><a (click)="backupDb()">Backup</a> </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<br/>
+<br/>
+<br/>
+<br/>
+<div class="container container-body" role="main">
+  <div class="row">
+    <div class="col-md-1">
+
+    </div>
+    <div class="col-md-10">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+
+
+</div>
+<br/>
+<br/>

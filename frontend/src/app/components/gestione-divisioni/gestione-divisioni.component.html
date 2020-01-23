@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col-md-12">
+    <h3>Inserisci nuova divisione</h3>
+  </div>
+  <div class="col-md-12">
+    <form #divisioneForm="ngForm">
+      <div class="form-group">
+        <div class="col-md-3">
+          <label>Descrizione</label>
+        </div>
+        <div class="col-md-9">
+          <input  class="form-control" type="text" maxlength="255" [(ngModel)]="nuovaDivisione.descrizione" name="descrizione"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-md-3">
+          <label>Default</label>
+        </div>
+        <div class="col-xs-1">
+          <input class="form-control" type="checkbox" [(ngModel)]="nuovaDivisione.defaultGroup" name="defaultGroup"/>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <button class="btn btn-success"  type="button" (click)="saveDivisione()">Salva</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <h3>Divisioni esistenti</h3>
+  </div>
+  <div class="col-md-12">
+    <data-table [headers]="headers"
+                [data]="divisioni|async"
+                (rowSelected)="deleteDivisione($event)"
+                [selectKey]="'Elimina'"
+                [selectable]="true"
+                [selectable2]="true"
+                [selectKey2]="'Default'"
+                (rowSelected2)="updateDivisione($event)"
+    ></data-table>
+  </div>
+</div>
+<br/>

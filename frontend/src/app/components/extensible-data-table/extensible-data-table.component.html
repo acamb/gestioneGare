@@ -1,0 +1,31 @@
+<table class="table table-striped table-hover" *ngIf="data && data.length > 0">
+  <thead>
+  <tr>
+    <th *ngIf="showRowNumber"></th>
+    <th *ngFor="let key of keys"><span *ngIf="showHeaders">{{headers[key] | translate}}</span></th>
+    <th *ngIf="selectable"></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let item of pagedItems">
+    <td *ngIf="showRowNumber">{{pagedItems.indexOf(item)+1}}</td>
+    <td *ngFor="let col of keys">
+      <label [innerHtml]="getDisplayValue(item[col])">
+      </label>
+    </td>
+
+    <td *ngIf="selectable">
+      <ng-template [ngTemplateOutlet]="itemTemplate" [ngOutletContext]="{item:item}"></ng-template>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<div *ngIf="paginated && data?.length>itemsPerPage" class="row">
+
+  <div class="col-md-12 centered">
+    <pagination [directionLinks]="true" [boundaryLinks]="true" [totalItems]="data.length" [ngModel]="currentPage"
+                (pageChanged)="pageChange($event)" [itemsPerPage]="itemsPerPage" [firstText]="'&laquo;'"
+                [lastText]="'&raquo;'" previousText="&lsaquo;" nextText="&rsaquo;" [maxSize]=5
+                [rotate]="false"></pagination>
+  </div>
+</div>

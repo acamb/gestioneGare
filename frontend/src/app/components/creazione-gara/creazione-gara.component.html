@@ -1,0 +1,72 @@
+<form #garaForm="ngForm" class="form-horizontal">
+  <div class="form-group">
+    <div class="col-md-3"><label>Anno societario</label>
+    </div>
+    <div class="col-md-3">
+      <input class="form-control" type="number" required [(ngModel)]="garaDaEditare.annoSocietario"
+              name="anno" min="2018" AnnoValidator/>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-md-3"><label>Punteggio massimo</label>
+    </div>
+    <div class="col-md-3">
+      <input class="form-control" type="number" required [(ngModel)]="garaDaEditare.punteggioMassimo"
+              name="punteggioMassimo" min="0"/>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-md-3">Nome gara</label>
+    <div class="col-md-9">
+      <input class="form-control" type="text" maxlength="50" required [(ngModel)]="garaDaEditare.nome" name="nome"
+             />
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-md-3">Tipo Gara</label>
+    <div class="col-md-9">
+      <span *ngFor="let tipo of tipiGara | async"><input type="checkbox" (change)="toggleTipo(tipo)"
+                                                         name="check{{tipo.nome}}" [checked]="checked[tipo.id]"
+                                                         />{{tipo.nome}}</span>
+    </div>
+  </div>
+  <div class="form-group"  >
+    <label class="col-md-3">Divisioni</label>
+    <div class="col-md-9" >
+      <data-table [data]="garaDaEditare.divisioni" [headers]="headersDivisioni"
+                  [itemsPerPage]="5" [selectable]="true" [selectKey]="'elimina'"
+                  (rowSelected)="eliminaDivisione($event)"
+                  [showRowNumber]="true" [showHeaders]="false">
+      </data-table>
+    </div>
+    <div class="col-md-3"></div>
+    <div class="col-md-9">
+      Aggiungi&nbsp;
+      <select >
+        <option>Seleziona una divisione</option>
+        <option *ngFor="let divisione of divisioni" (click)="addDivisione(divisione)">
+          {{divisione.descrizione}}
+        </option>
+      </select>
+    </div>
+  </div>
+  <button class="btn btn-primary" (click)="openDuplicaModal()">Copia da gara precedente</button>
+  <app-creazione-gruppi [divisioni]="garaDaEditare.divisioni" [arcieri]="arcieri"
+                        [gara]="garaDaEditare"
+                        [numeroCoppie]="numeroCoppie"
+
+                        (valueChangedEmitter)="onChangeGruppi($event)"></app-creazione-gruppi>
+  <button type="button" class="btn btn-success" (click)="salva()"
+          [disabled]="(!garaForm.form.valid) || saving">Salva
+  </button>
+</form>
+<data-table class="dont-show" [styckyOnScroll]="150" [data]="garaDaEditare.divisioni" [headers]="headersDivisioni"
+            [itemsPerPage]="5" [selectable]="!edit" [selectKey]="'elimina'"
+            (rowSelected)="eliminaDivisione($event)"
+            [showRowNumber]="true" [showHeaders]="false">
+</data-table>
+<app-modal #duplicaModal class="modalContainer" >
+  <app-gara-picker (garaSelected)="duplicaGara($event)" ></app-gara-picker>
+  <br/>
+  <button class="btn btn-primary" (click)="annulla()">Annulla</button>
+</app-modal>

@@ -1,0 +1,19 @@
+<ng-template #template let-item="item">
+  <div>
+    <button class="btn btn-primary btn-sm" (click)="modifica(item)">Modifica</button>
+    <button class="btn btn-primary btn-sm" (click)="classifica(item)">Classifica</button>
+    <button class="btn btn-primary btn-sm" (click)="gironi(item)" *ngIf="isGaraScontri(item)">Gironi</button>
+  </div>
+</ng-template>
+<h2>Gestione gare</h2>
+<a routerLink="/creazione">Creazione nuova gara</a>
+<br/><br/>
+<h3>Gare inserite</h3>
+<app-extensible-data-table [selectable]="true"
+            [paginated]="true"
+            [data]="gare | async"
+            [headers]="headersGare"
+            [itemsPerPage]="5"
+            [itemTemplate]="template"
+            [getDisplayValue]="getDisplayValueFunction()"
+></app-extensible-data-table>

@@ -1,0 +1,28 @@
+<h2>Gestione torneo Indoor</h2>
+<form>
+  <div class="row">
+    <div class="col-md-2">
+      <label>Anno</label>
+    </div>
+    <div class="col-md-2">
+<input class="form-control" type="number" required [(ngModel)]="anno" name="anno" min="2018" AnnoValidator/>
+    </div>
+    <div class="col-md-2">
+  <button (click)="cerca()" class="btn btn-primary">Cerca</button>
+    </div>
+  </div>
+</form>
+<div *ngIf="searched">
+<data-table
+            [selectKey2]="'Classifica'"
+            (rowSelected2)="classifica($event)"
+            [selectable2]="true"
+            [paginated]="true"
+            [data]="gare"
+            [headers]="headersGare"
+            [itemsPerPage]="5"></data-table>
+
+
+<button class="btn btn-primary" (click)="classificaPerDivisioni()">Classifica divisioni</button>
+  <button class="btn btn-primary" (click)="classificaPerGruppi()">Classifica gruppi</button>
+</div>
