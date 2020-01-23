@@ -1,11 +1,16 @@
 package acambieri.sanbernardo.gestionegare.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+
+@Entity
 public class ArciereVO extends Arciere{
 
+    @Transient
     private int punteggio;
-
+    @Transient
     private Double sommaPuntiNormalizzata;
-
+    @Transient
     private boolean escludiClassifica;
 
     public ArciereVO(){
@@ -26,7 +31,7 @@ public class ArciereVO extends Arciere{
         this.id = arciere.id;
     }
 
-    public ArciereVO(ConfGara conf){
+    public ArciereVO(Partecipazione conf){
         this(conf.getArciere());
         this.punteggio = conf.getPunteggio();
         this.divisione = conf.getDivisione();

@@ -1,10 +1,21 @@
 package acambieri.sanbernardo.gestionegare.model;
 
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "ARCIERI")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Arciere {
     protected String nome;
-    protected long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    protected Long id;
+
     protected String cognome;
     protected String sesso;
+
+    @ManyToOne
     protected Divisione divisione;
 
     public String getSesso() {
@@ -31,11 +42,11 @@ public class Arciere {
         this.nome = nome;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

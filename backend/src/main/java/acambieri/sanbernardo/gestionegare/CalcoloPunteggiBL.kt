@@ -1,6 +1,5 @@
 package acambieri.sanbernardo.gestionegare
 
-import acambieri.sanbernardo.gestionegare.dao.GareDao
 import acambieri.sanbernardo.gestionegare.model.*
 
 import java.util.ArrayList
@@ -12,25 +11,23 @@ object CalcoloPunteggiBL {
 
     //TODO[AC] provare che dopo la modifica la classifica sia coerente e che  a parita' di posizioni(ascending) guardi la sommaPuntiNormalizzata (descending)
 
-    val sommaPuntiNormalizzatiExpr = {punteggi :HashMap<ArciereVO, StatisticheTorneo>,gara : Gara,confGara: ConfGara,index: Int -> (confGara.punteggio.toDouble() * 600.0 / gara.punteggioMassimo.toDouble()).toDouble()}
-    val sommaPosizioniExpr = {punteggi :HashMap<ArciereVO, StatisticheTorneo>,gara : Gara,confGara: ConfGara,index: Int->
-        punteggi[confGara.arciere]!!.punteggi.add(index.toDouble())
+    val sommaPuntiNormalizzatiExpr = { punteggi :HashMap<ArciereVO, StatisticheTorneo>, gara : Gara, partecipazione: Partecipazione, index: Int -> (partecipazione.punteggio.toDouble() * 600.0 / gara.punteggioMassimo.toDouble()).toDouble()}
+    val sommaPosizioniExpr = { punteggi :HashMap<ArciereVO, StatisticheTorneo>, gara : Gara, partecipazione: Partecipazione, index: Int->
+        punteggi[partecipazione.arciere]!!.punteggi.add(index.toDouble())
     }
 
-    fun calcolaClassificaTorneoSuPunti(gareTorneo: List<Gara>, gruppi: Boolean, dao: GareDao): List<ClassificaPerDivisione> {
+    fun calcolaClassificaTorneoSuPunti(gareTorneo: List<Gara>, gruppi: Boolean): List<ClassificaPerDivisione> {
         return calcolaClassifica(gareTorneo,
                 gruppi,
-                dao,
                 {punti -> Math.round(punti!!.sortedDescending().stream()!!.limit(3).reduce(BinaryOperator<Double> { a, b -> java.lang.Double.sum(a, b) }).get()).toInt()},
                 // punti : puntiMassimiGara = x : 600
                 { punteggi,g,c,index: Int ->  punteggi[c.arciere]!!.punteggi.add(sommaPuntiNormalizzatiExpr(punteggi,g,c,index)) }
             )
     }
 
-    fun calcolaClassificaSuPosizioni(gareTorneo: List<Gara>, gruppi: Boolean, dao: GareDao): List<ClassificaPerDivisione> {
+    fun calcolaClassificaSuPosizioni(gareTorneo: List<Gara>, gruppi: Boolean): List<ClassificaPerDivisione> {
         return calcolaClassifica(gareTorneo,
                 gruppi,
-                dao,
                 {punti: MutableList<Double> ->
                     while(punti.size < 4){
                         punti.add(100.0);
@@ -49,17 +46,17 @@ object CalcoloPunteggiBL {
         )
     }
 
-    fun calcolaClassifica(gareTorneo: List<Gara>, gruppi: Boolean, dao: GareDao,
+    fun calcolaClassifica(gareTorneo: List<Gara>, gruppi: Boolean,
                           sommaPuntiExpr: (punteggiList: MutableList<Double>) -> Int,
-                          calcoloSingoloPunteggioExpr:  (punteggi: HashMap<ArciereVO,StatisticheTorneo>,gara:Gara,confGara: ConfGara,posizione: Int) -> Any,
+                          calcoloSingoloPunteggioExpr:  (punteggi: HashMap<ArciereVO,StatisticheTorneo>, gara:Gara, partecipazione: Partecipazione, posizione: Int) -> Any,
                           sortingClassificaComparator: Comparator<in ArciereVO> = compareByDescending {  it.punteggio }): List<ClassificaPerDivisione>{
         val punteggi = HashMap<ArciereVO, StatisticheTorneo>()
         val classifiche = ArrayList<ClassificaPerDivisione>()
         for (g in gareTorneo) {
             //Il dao fornisce una lista ordinata per divisione,punti mentre a noi servono i punti
-            val confGare = dao.getConfGara(g).stream().sorted { o1, o2 -> o2.punteggio - o1.punteggio  }.toList()
+            val confGare = g.partecipazioni.stream().sorted { o1, o2 -> o2.punteggio - o1.punteggio  }.toList()
             //per ogni gara prendo il punteggio dell'arciere
-            confGare.forEachIndexed({ index: Int,c : ConfGara ->
+            confGare.forEachIndexed({ index: Int,c : Partecipazione ->
                 if (!punteggi.containsKey(c.arciere)) {
                     if (gruppi) {
                         val arciereVO = ArciereVO(c)
@@ -103,9 +100,9 @@ object CalcoloPunteggiBL {
         return classifiche
     }
 
-    fun calcolaClassificaGaraScontriPerGruppi(gara: Gara, dao: GareDao): List<ClassificaPerDivisione> {
+    fun calcolaClassificaGaraScontriPerGruppi(gara: Gara): List<ClassificaPerDivisione> {
         val classifiche = ArrayList<ClassificaPerDivisione>();
-        val confGare = dao.getConfGara(gara).stream().sorted { o1, o2 -> o2.punteggio - o1.punteggio  }.toList()
+        val confGare = gara.partecipazioni.stream().sorted { o1, o2 -> o2.punteggio - o1.punteggio  }.toList()
         for(conf in confGare){
             val arciere = ArciereVO(conf)
             when {

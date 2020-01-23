@@ -9,6 +9,6 @@ import org.springframework.context.annotation.ComponentScan;
 public class GestionegareApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(new Class[] { GestionegareApplication.class,DbUpdater.class}, args);
+		SpringApplication.run(new Class[] { GestionegareApplication.class/*,DbUpdater.class*/}, args);
 	}
 }

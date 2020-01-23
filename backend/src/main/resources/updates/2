@@ -1,3 +1,0 @@
-insert into tipi_gara (nome) values ('FIOCCHI');
-insert into tipi_gara (nome) values ('INDOOR');
-insert into tipi_gara (nome) values ('OUTDOOR');

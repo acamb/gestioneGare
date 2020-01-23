@@ -1,10 +1,20 @@
 package acambieri.sanbernardo.gestionegare.model;
 
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
+@Table(name="DIVISIONI")
 public class Divisione {
-    private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     private String descrizione;
     private boolean defaultGroup;
     private boolean enabled;
+/*    @ManyToMany
+    @JoinColumn(name = "ID_DIVISIONE",table = "DIVISIONI_GARA")
+    private List<Gara> gare;*/
 
     public boolean isDefaultGroup() {
         return defaultGroup;
@@ -14,11 +24,11 @@ public class Divisione {
         this.defaultGroup = defaultGroup;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

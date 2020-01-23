@@ -1,3 +1,4 @@
+/*
 package acambieri.sanbernardo.gestionegare;
 
 import acambieri.sanbernardo.gestionegare.dao.UpdateDao;
@@ -59,3 +60,4 @@ public class DbUpdater implements ServletContextInitializer {
         updateDao.closeSession();
     }
 }
+*/

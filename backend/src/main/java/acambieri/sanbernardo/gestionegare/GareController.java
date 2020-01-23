@@ -1,11 +1,12 @@
 package acambieri.sanbernardo.gestionegare;
 
 import acambieri.sanbernardo.gestionegare.model.*;
+import acambieri.sanbernardo.gestionegare.services.GareService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -14,28 +15,30 @@ public class GareController {
     
     @Autowired
     private GareService service;
-    
+
+    @Transactional
     @RequestMapping(value="/salva",method= RequestMethod.POST)
     public GaraVO salvaGara(@RequestBody GaraVO gara){
         service.salvaGara(gara);
         return service.getGara(gara);
     }
 
+    @Transactional
     @RequestMapping(value="/update",method= RequestMethod.POST)
     public GaraVO updateGara(@RequestBody GaraVO gara){
-        service.updateGara(gara);
+        service.salvaGara(gara);
         return service.getGara(gara);
     }
     
     @RequestMapping(value = "/getGare")
     public List<Gara> getGare(@RequestParam("anno") Integer anno)
     {
-        return service.getGareLight(anno);
+        return service.getGare(anno);
     }
     
     @RequestMapping(value= "/getGareCompletate")
     public List<Gara> getGareCompletate(@RequestParam("anno") int anno,@RequestParam("tipo") int id){
-        return service.getGareCompletateLight(anno,id);
+        return service.getGareCompletate(anno,service.getTipoGara((long)id));
     }
     
     @RequestMapping(value = "/getGara")
@@ -44,12 +47,14 @@ public class GareController {
         gara.setId(id);
         return service.getGara(gara);
     }
-    
+
+    @Transactional
     @RequestMapping(value = "/associaListe",method=RequestMethod.PUT)
     public GaraVO associaListe(@RequestBody GaraVO gara){
-        return service.associaListe(gara);
+        return service.salvaGara(gara);
     }
-    
+
+    @Transactional
     @RequestMapping(value = "/salvaClassifica",method=RequestMethod.PUT)
     public GaraVO salvaClassifica(@RequestBody GaraVO gara){
         return service.salvaClassifica(gara);
@@ -104,26 +109,28 @@ public class GareController {
         return service.getClassificaFiocchiPerGruppi(anno);
     }
 
+    @Transactional
     @PostMapping(value = "/divisioni/add")
     public Divisione createDivisione(@RequestBody Divisione divisione){
-        return service.insertDivisione(divisione);
+        return service.saveDivisione(divisione);
     }
 
+    @Transactional
     @PostMapping(value = "/divisioni/delete")
     public Boolean deleteDivisione(@RequestBody Divisione divisione){
         service.deleteDivisione(divisione);
         return true;
     }
 
+    @Transactional
     @PostMapping(value = "/divisioni/update")
     public Boolean updateDivisione(@RequestBody Divisione divisione){
-        service.updateDivisione(divisione);
+        service.saveDivisione(divisione);
         return true;
     }
 
     @PostMapping(value = "/backup")
     public GenericResponseWithPayload backup(){
-        //todo[ac] wrapparlo in un oggetto
-        return new GenericResponseWithPayload(service.backupDb());
+        return new GenericResponseWithPayload<>(service.doBackup());
     }
 }

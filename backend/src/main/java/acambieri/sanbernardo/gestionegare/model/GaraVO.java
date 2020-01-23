@@ -1,13 +1,19 @@
 package acambieri.sanbernardo.gestionegare.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class GaraVO extends Gara {
-
+    @Transient
     private List<ArciereVO> gruppoA1;
+    @Transient
     private List<ArciereVO> gruppoB1;
+    @Transient
     private List<ArciereVO> gruppoA2;
+    @Transient
     private List<ArciereVO> gruppoB2;
 
     public GaraVO(){
@@ -29,7 +35,7 @@ public class GaraVO extends Gara {
         this.completata = gara.completata;
     }
 
-    public GaraVO(Gara gara,List<ConfGara> conf){
+    public GaraVO(Gara gara,List<Partecipazione> conf){
         this(gara);
         conf.stream().forEach(configurazione -> {
             ArciereVO arciere = new ArciereVO(configurazione.getArciere());

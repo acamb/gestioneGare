@@ -1,11 +1,20 @@
 package acambieri.sanbernardo.gestionegare.model;
 
-public class ConfGara {
-    private long id;
+import javax.persistence.*;
+import java.text.ParseException;
+
+@Entity
+public class Partecipazione {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @ManyToOne
     private Gara gara;
+    @OneToOne
     private Arciere arciere;
     private String gruppo;
     private int punteggio;
+    @OneToOne
     private Divisione divisione;
     private boolean escludiClassifica;
 
@@ -13,55 +22,61 @@ public class ConfGara {
         return escludiClassifica;
     }
 
-    public void setEscludiClassifica(boolean escludiClassifica) {
+    public Partecipazione setEscludiClassifica(boolean escludiClassifica) {
         this.escludiClassifica = escludiClassifica;
+        return this;
     }
 
     public Divisione getDivisione() {
         return divisione;
     }
 
-    public void setDivisione(Divisione divisione) {
+    public Partecipazione setDivisione(Divisione divisione) {
         this.divisione = divisione;
+        return this;
     }
 
     public Gara getGara() {
         return gara;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public void setGara(Gara gara) {
+    public Partecipazione setGara(Gara gara) {
         this.gara = gara;
+        return this;
     }
 
     public Arciere getArciere() {
         return arciere;
     }
 
-    public void setArciere(Arciere arciere) {
+    public Partecipazione setArciere(Arciere arciere) {
         this.arciere = arciere;
+        return this;
     }
 
     public String getGruppo() {
         return gruppo;
     }
 
-    public void setGruppo(String gruppo) {
+    public Partecipazione setGruppo(String gruppo) {
         this.gruppo = gruppo;
+        return this;
     }
 
     public int getPunteggio() {
         return punteggio;
     }
 
-    public void setPunteggio(int punteggio) {
+    public Partecipazione setPunteggio(int punteggio) {
         this.punteggio = punteggio;
+        return this;
     }
 }
