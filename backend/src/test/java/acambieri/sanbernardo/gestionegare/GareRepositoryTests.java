@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Set;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
 @DataJpaTest
 public class GareRepositoryTests {
     @Autowired
