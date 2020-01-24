@@ -1,4 +1,4 @@
-package acambieri.sanbernardo.gestionegare;
+package acambieri.sanbernardo.gestionegare.controllers;
 
 import acambieri.sanbernardo.gestionegare.model.*;
 import acambieri.sanbernardo.gestionegare.services.GareService;

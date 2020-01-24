@@ -1,4 +1,4 @@
-package acambieri.sanbernardo.gestionegare;
+package acambieri.sanbernardo.gestionegare.config;
 
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
