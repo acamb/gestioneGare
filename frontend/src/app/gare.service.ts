@@ -10,7 +10,6 @@ import {Divisione} from "./model/Divisione";
 import {ClassificaPerDivisione} from "./model/ClassifichePerDivisione";
 import {GruppiContainer} from "./model/GruppiContainer";
 import "rxjs/add/operator/switchMap";
-import {extractData} from "./app.module";
 
 
 @Injectable()
@@ -22,16 +21,13 @@ export class GareService {
     this.initTipi();
   }
 
-  async initTipi(){
-    let tipi: Array<TipoGara> = await this.getTipiGara().toPromise();
-    for(let tipo of tipi){
-        this.mapTipi.set(tipo.nome,tipo);
-    }
+  initTipi(){
+    this.getTipiGara().map(
+      tipi => tipi.forEach(tipo => this.mapTipi.set(tipo.nome,tipo))
+    ).take(1).subscribe();
   }
 
   static getServer(): string{
-    //let getUrl = window.location;
-    //let baseUrl = getUrl .protocol + "//" + getUrl.host + environment.context
     let baseUrl = environment.server + environment.context
     return baseUrl;
   }
@@ -51,17 +47,6 @@ export class GareService {
 
   }
 
-  associaListaArcieri(gara : Gara): any{
-    return this.http.put(GareService.getServer() + "gare/associaListe",gara)
-
-  }
-
-  /**
-   *
-   * @returns {Array<Gara>}
-   *
-   * Ritorna una lista di gare per cui c'e' gia' una classifica, senza tirare su i gruppi e la classifica
-   */
   getGareCompletateLight(anno,tipo: TipoGara) : Observable<Array<Gara>> {
     return this.http.get(GareService.getServer() + "gare/getGareCompletate?anno="+anno+"&tipo="+tipo.id)
 
@@ -85,7 +70,7 @@ export class GareService {
 
 
   getTipiGara() : Observable<Array<TipoGara>>{
-    return this.http.get(GareService.getServer() + "gare/getTipi")
+    return this.http.get<Array<TipoGara>>(GareService.getServer() + "gare/getTipi")
 
   }
 
