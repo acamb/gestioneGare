@@ -19,91 +19,103 @@ import {TipoGaraFiocchiResolver} from "./resolvers/TipoGaraFiocchiResolver";
 import {ArcieriListResolver} from "./resolvers/ArcieriListResolver";
 import {GestioneDivisioniComponent} from "./components/gestione-divisioni/gestione-divisioni.component";
 import {GironiComponent} from "./components/gironi/gironi.component";
+import {AuthGuard} from "./resolvers/AuthGuard";
+import {HomeComponent} from "./components/home/home.component";
 
 
 
 const menuRoutes: Routes = [
-
   {
-    path: "gironi/:id",
-    component: GironiComponent,
-    resolve: {
-      gara: GaraResolver
-    }
-  },{
-    path: "classifica/:id",
-    component: ClassificaGaraComponent,
-    resolve: {
-      gara: GaraResolver
-    }
-  },
-  {
-    path: "modifica/:id",
-    component: ModificaGaraContainerComponent,
-    resolve: {
-      garaDaEditare: GaraResolver,
-      arcieri: ArcieriListResolver
-    }
-  },
-  {
-    path: "creazione",
-    component: CreazioneGaraContainerComponent,
-    resolve: {
-      arcieri: ArcieriListResolver
-    }
-  },
-  {
-    path: 'gestioneGare',
-    component: GestioneGareComponent,
-  },
-  {
-    path: 'torneoIndoor',
-    component: TorneoIndoorComponent,
-  },
-  {
-    path: 'classificaIndoorDivisioni/:anno',
-    component: ClassificaPerDivisioniComponent,
-    resolve: {
-      tipo: TipoGaraIndoorResolver
-    }
-  },
-  {
-    path: 'classificaIndoorGruppi/:anno',
-    component: ClassificaPerGruppiComponent,
-    resolve: {
-      tipo: TipoGaraIndoorResolver
-    }
-  },
-  {
-    path: 'classificaFiocchiDivisioni/:anno',
-    component: ClassificaPerDivisioniComponent,
-    resolve: {
-      tipo: TipoGaraFiocchiResolver
-    }
-  },
-  {
-    path: 'classificaFiocchiGruppi/:anno',
-    component: ClassificaPerGruppiComponent,
-    resolve: {
-      tipo: TipoGaraFiocchiResolver
-    }
-  },
-  {
-    path: 'scontri',
-    component: ScontriComponent,
-  },
-  {
-    path: 'fiocchi',
-    component: FiocchiComponent,
-  },
-  {
-    path: 'divisioni',
-    component: GestioneDivisioniComponent,
+    path: 'authenticate',
+    component: HomeComponent
   },
   {
     path: '',
-    redirectTo: 'gestioneGare',
-    pathMatch: 'full'
+    canActivateChild: [AuthGuard],
+    runGuardsAndResolvers: 'always',
+    children: [
+      {
+        path: "gironi/:id",
+        component: GironiComponent,
+        resolve: {
+          gara: GaraResolver
+        }
+      }, {
+        path: "classifica/:id",
+        component: ClassificaGaraComponent,
+        resolve: {
+          gara: GaraResolver
+        }
+      },
+      {
+        path: "modifica/:id",
+        component: ModificaGaraContainerComponent,
+        resolve: {
+          garaDaEditare: GaraResolver,
+          arcieri: ArcieriListResolver
+        }
+      },
+      {
+        path: "creazione",
+        component: CreazioneGaraContainerComponent,
+        resolve: {
+          arcieri: ArcieriListResolver
+        }
+      },
+      {
+        path: 'gestioneGare',
+        component: GestioneGareComponent,
+      },
+      {
+        path: 'torneoIndoor',
+        component: TorneoIndoorComponent,
+      },
+      {
+        path: 'classificaIndoorDivisioni/:anno',
+        component: ClassificaPerDivisioniComponent,
+        resolve: {
+          tipo: TipoGaraIndoorResolver
+        }
+      },
+      {
+        path: 'classificaIndoorGruppi/:anno',
+        component: ClassificaPerGruppiComponent,
+        resolve: {
+          tipo: TipoGaraIndoorResolver
+        }
+      },
+      {
+        path: 'classificaFiocchiDivisioni/:anno',
+        component: ClassificaPerDivisioniComponent,
+        resolve: {
+          tipo: TipoGaraFiocchiResolver
+        }
+      },
+      {
+        path: 'classificaFiocchiGruppi/:anno',
+        component: ClassificaPerGruppiComponent,
+        resolve: {
+          tipo: TipoGaraFiocchiResolver
+        }
+      },
+      {
+        path: 'scontri',
+        component: ScontriComponent,
+      },
+      {
+        path: 'fiocchi',
+        component: FiocchiComponent,
+      },
+      {
+        path: 'divisioni',
+        component: GestioneDivisioniComponent,
+      },
+      {
+        path: '',
+        redirectTo: "gestioneGare",
+        pathMatch: 'full'
+      }
+      ]
   }
 
 ];

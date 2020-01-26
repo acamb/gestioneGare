@@ -10,10 +10,9 @@ import {
 import { SortableModule } from 'ngx-bootstrap/sortable';
 import { GruppiComponent } from './components/gruppi/gruppi.component';
 import {FormsModule, NgControl} from "@angular/forms";
-import {RouterModule} from "@angular/router";
 import {routing} from "./app.routing";
 import {DataTableComponent} from "./components/data-table/app.data-table";
-import {Http, HttpModule} from "@angular/http";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 import { CreazioneGaraComponent } from './components/creazione-gara/creazione-gara.component';
 import {GareService} from "./gare.service";
 import { AnnoValidatorDirective } from './validators/anno-validator.directive';
@@ -41,9 +40,14 @@ import { CreazioneGruppiComponent } from './components/creazione-gruppi/creazion
 import { ExtensibleDataTableComponent } from './components/extensible-data-table/extensible-data-table.component';
 import { GironiComponent } from './components/gironi/gironi.component';
 import { BackButtonComponent } from './components/back-button/back-button.component';
+import { HomeComponent } from './components/home/home.component';
+import {AuthenticationService} from "./authentication.service";
+import {AuthGuard} from "./resolvers/AuthGuard";
+import {JwtInterceptorService} from "./jwt-interceptor.service";
+import {HTTP_INTERCEPTORS} from "@angular/common/http";
 
 // AoT requires an exported function for factories
-export function HttpLoaderFactory(http: Http) {
+export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http,"/client/assets/i18n/");
 };
 
@@ -73,12 +77,13 @@ export function HttpLoaderFactory(http: Http) {
     CreazioneGruppiComponent,
     ExtensibleDataTableComponent,
     GironiComponent,
-    BackButtonComponent
+    BackButtonComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule,
+    HttpClientModule,
     routing,
     AlertModule.forRoot(),
     ButtonsModule.forRoot(),
@@ -90,12 +95,21 @@ export function HttpLoaderFactory(http: Http) {
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
-        deps: [Http]
+        deps: [HttpClient]
       }
     })
 
   ],
-  providers: [HttpModule,GareService,GaraResolver,TipoGaraFiocchiResolver,TipoGaraIndoorResolver,ArcieriListResolver],
+  providers: [HttpClient,GareService,GaraResolver,TipoGaraFiocchiResolver,TipoGaraIndoorResolver,ArcieriListResolver,
+  AuthenticationService,AuthGuard,{
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptorService,
+      multi: true
+    }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+export function extractData(res){
+  return res.json() || {};
+}
