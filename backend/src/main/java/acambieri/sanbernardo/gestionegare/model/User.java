@@ -1,9 +1,7 @@
 package acambieri.sanbernardo.gestionegare.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class User {
@@ -13,9 +11,28 @@ public class User {
     private Long id;
     private String username;
     private String password;
+    private boolean active;
+    @ManyToMany
+    private List<Role> roles;
 
     public Long getId() {
         return id;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
     public void setId(Long id) {

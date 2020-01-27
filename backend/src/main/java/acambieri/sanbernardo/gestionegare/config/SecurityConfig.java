@@ -18,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -37,7 +37,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf().disable()
+        httpSecurity.authorizeRequests().antMatchers("/h2","/h2/**").permitAll().and().headers().frameOptions().sameOrigin();
+        httpSecurity.csrf().disable() //no need of csrf protection since we are setting jwt token in angular with an interceptor
                 .authorizeRequests().antMatchers("/","/index.html","/*.bundle.*","/auth").permitAll()
 
                         .anyRequest().authenticated().and()
