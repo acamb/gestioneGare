@@ -3,6 +3,7 @@ package acambieri.sanbernardo.gestionegare.services;
 import acambieri.sanbernardo.gestionegare.model.User;
 import acambieri.sanbernardo.gestionegare.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.config.annotation.authentication.configurers.provisioning.UserDetailsManagerConfigurer;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @Service
 @Primary
+@Qualifier("dbUserRepo")
 public class DbUserDetailService implements UserDetailsService {
 
     @Autowired
@@ -31,6 +33,12 @@ public class DbUserDetailService implements UserDetailsService {
         if(user.getRoles() != null) {
             user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority( role.getName())));
         }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(),user.getPassword(),authorities);
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+                user.getPassword(),
+                user.isActive(),
+                true,
+                true,
+                true,
+                authorities);
     }
 }

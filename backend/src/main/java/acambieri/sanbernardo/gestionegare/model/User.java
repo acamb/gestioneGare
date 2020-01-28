@@ -15,6 +15,17 @@ public class User {
     @ManyToMany
     private List<Role> roles;
 
+    public User(){
+
+    }
+
+    public User(String username,boolean active,List<Role> roles){
+        this();
+        this.username=username;
+        this.active=active;
+        this.roles=roles;
+    }
+
     public Long getId() {
         return id;
     }

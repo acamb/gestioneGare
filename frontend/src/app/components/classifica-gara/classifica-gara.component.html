@@ -36,8 +36,8 @@
   <app-classifiche-per-divisione-container [classifiche]="classifichePerGruppi"></app-classifiche-per-divisione-container>
 </div>
 <div class="col-md-4">
-  <button class="btn btn-primary print-hidden" [disabled]="modifica" (click)="toggleModifica()">
-    <span *ngIf="!modifica">Modifica</span>
+  <button class="btn btn-primary print-hidden" [disabled]="modifica" (click)="toggleModifica()" *appRestrictedRoles="['ROLE_EDIT','ROLE_ADMIN']">
+    <span *ngIf="!modifica" >Modifica</span>
     <span *ngIf="modifica">Annulla</span>
   </button>
   <app-back-button ></app-back-button>

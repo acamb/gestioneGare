@@ -16,8 +16,8 @@
         <li><a routerLink="/torneoIndoor" routerLinkActive="activeRoute">Torneo Indoor</a></li>
         <li><a routerLink="/fiocchi" routerLinkActive="activeRoute">Fiocchi</a></li>
         <li><a routerLink="/scontri" routerLinkActive="activeRoute">Scontri</a></li>
-        <li><a routerLink="/divisioni" routerLinkActive="activeRoute">Gestione divisioni</a></li>
-        <li><a (click)="backupDb()">Backup</a> </li>
+        <li><a routerLink="/divisioni" routerLinkActive="activeRoute" *appRestrictedRoles="['ROLE_ADMIN']">Gestione divisioni</a></li>
+        <li><a (click)="backupDb()" *appRestrictedRoles="['ROLE_EDIT','ROLE_ADMIN']">Backup</a> </li>
       </ul>
     </div>
   </div>

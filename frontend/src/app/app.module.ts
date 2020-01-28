@@ -45,6 +45,7 @@ import {AuthenticationService} from "./authentication.service";
 import {AuthGuard} from "./resolvers/AuthGuard";
 import {JwtInterceptorService} from "./jwt-interceptor.service";
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
+import { RestrictedRoleDirective } from './directives/restricted-role.directive';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -78,7 +79,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     ExtensibleDataTableComponent,
     GironiComponent,
     BackButtonComponent,
-    HomeComponent
+    HomeComponent,
+    RestrictedRoleDirective
   ],
   imports: [
     BrowserModule,
