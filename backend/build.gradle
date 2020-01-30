@@ -98,6 +98,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:'2.2.4.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version:'2.2.4.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version:'2.2.4.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version:'2.2.4.RELEASE'
     compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jre8', version:'1.1.60'
     compile group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version:'1.1.60'
     compile group: 'com.h2database', name: 'h2', version:'1.4.196'

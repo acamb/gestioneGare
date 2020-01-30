@@ -1,5 +1,6 @@
 package acambieri.sanbernardo.gestionegare.controllers;
 
+import acambieri.sanbernardo.gestionegare.aspects.HidePassword;
 import acambieri.sanbernardo.gestionegare.controllers.requests.AuthRequest;
 import acambieri.sanbernardo.gestionegare.controllers.responses.AuthResponse;
 import acambieri.sanbernardo.gestionegare.model.User;
@@ -42,12 +43,12 @@ public class AuthController {
     private Long tokenValidity;
 
     @RequestMapping(value = "/auth", method = RequestMethod.POST)
+    @HidePassword
     public ResponseEntity<AuthResponse> createAuthenticationToken(@RequestBody AuthRequest authenticationRequest) {
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
         UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         final String token = generateToken(userDetails,tokenValidity,jwtSecret);
         User user = userRepository.findByUsernameAndActiveIsTrue(userDetails.getUsername());
-        user.setPassword("[PROTECTED]");
         return ResponseEntity.ok(new AuthResponse(token,user
                 ));
     }
