@@ -1,8 +1,9 @@
-package acambieri.sanbernardo.gestionegare;
+package acambieri.sanbernardo.gestionegare.controllers;
 
 import acambieri.sanbernardo.gestionegare.model.*;
 import acambieri.sanbernardo.gestionegare.services.GareService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -17,6 +18,7 @@ public class GareController {
     private GareService service;
 
     @Transactional
+    @Secured({"ROLE_ADMIN","ROLE_EDIT"})
     @RequestMapping(value="/salva",method= RequestMethod.POST)
     public GaraVO salvaGara(@RequestBody GaraVO gara){
         service.salvaGara(gara);
@@ -24,6 +26,7 @@ public class GareController {
     }
 
     @Transactional
+    @Secured({"ROLE_ADMIN","ROLE_EDIT"})
     @RequestMapping(value="/update",method= RequestMethod.POST)
     public GaraVO updateGara(@RequestBody GaraVO gara){
         service.salvaGara(gara);
@@ -49,12 +52,14 @@ public class GareController {
     }
 
     @Transactional
+    @Secured({"ROLE_ADMIN","ROLE_EDIT"})
     @RequestMapping(value = "/associaListe",method=RequestMethod.PUT)
     public GaraVO associaListe(@RequestBody GaraVO gara){
         return service.salvaGara(gara);
     }
 
     @Transactional
+    @Secured({"ROLE_ADMIN","ROLE_EDIT"})
     @RequestMapping(value = "/salvaClassifica",method=RequestMethod.PUT)
     public GaraVO salvaClassifica(@RequestBody GaraVO gara){
         return service.salvaClassifica(gara);
@@ -110,12 +115,14 @@ public class GareController {
     }
 
     @Transactional
+    @Secured({"ROLE_ADMIN"})
     @PostMapping(value = "/divisioni/add")
     public Divisione createDivisione(@RequestBody Divisione divisione){
         return service.saveDivisione(divisione);
     }
 
     @Transactional
+    @Secured({"ROLE_ADMIN"})
     @PostMapping(value = "/divisioni/delete")
     public Boolean deleteDivisione(@RequestBody Divisione divisione){
         service.deleteDivisione(divisione);
@@ -123,6 +130,7 @@ public class GareController {
     }
 
     @Transactional
+    @Secured({"ROLE_ADMIN","ROLE_EDIT"})
     @PostMapping(value = "/divisioni/update")
     public Boolean updateDivisione(@RequestBody Divisione divisione){
         service.saveDivisione(divisione);
@@ -130,6 +138,7 @@ public class GareController {
     }
 
     @PostMapping(value = "/backup")
+    @Secured({"ROLE_ADMIN","ROLE_EDIT"})
     public GenericResponseWithPayload backup(){
         return new GenericResponseWithPayload<>(service.doBackup());
     }

@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import {Arciere} from "./model/Arciere";
 import {TipoGara} from "./model/TipoGara";
 import {Gara} from "./model/Gara";
-import {SelectableItem} from "./model/SelectableItem";
 import {Observable} from "rxjs/Observable";
-import {Http} from "@angular/http";
-import {environment} from "../environments/environment";
+import {HttpClient} from "@angular/common/http";
+
 import {Divisione} from "./model/Divisione";
 import {ClassificaPerDivisione} from "./model/ClassifichePerDivisione";
 import {GruppiContainer} from "./model/GruppiContainer";
 import "rxjs/add/operator/switchMap";
+import {getServer} from "./app.module";
 
 
 @Injectable()
@@ -17,121 +17,101 @@ export class GareService {
 
   mapTipi = new Map<string,TipoGara>();
 
-  constructor(private http: Http) {
+  constructor(private http: HttpClient) {
     this.initTipi();
   }
 
-  async initTipi(){
-    let tipi: Array<TipoGara> = await this.getTipiGara().toPromise();
-    for(let tipo of tipi){
-        this.mapTipi.set(tipo.nome,tipo);
-    }
+  initTipi(){
+    this.getTipiGara().map(
+      tipi => tipi.forEach(tipo => this.mapTipi.set(tipo.nome,tipo))
+    ).take(1).subscribe();
   }
 
-  static getServer(): string{
-    //let getUrl = window.location;
-    //let baseUrl = getUrl .protocol + "//" + getUrl.host + environment.context
-    let baseUrl = environment.server + environment.context
-    return baseUrl;
-  }
+
 
   getArcieri(): Observable<Array<Arciere>> {
-     return this.http.get(GareService.getServer() + "gare/getArcieri")
-       .map(this.extractData);
+     return this.http.get(getServer() + "gare/getArcieri")
+
   }
 
   salvaGara(gara: Gara) : Observable<Gara>{
-     return this.http.post(GareService.getServer() + "gare/salva",gara)
-       .map(this.extractData);
+     return this.http.post(getServer() + "gare/salva",gara)
+
   }
 
   updateGara(gara: Gara) : Observable<Gara>{
-    return this.http.post(GareService.getServer() + "gare/update",gara)
-      .map(this.extractData);
+    return this.http.post(getServer() + "gare/update",gara)
+
   }
 
-  associaListaArcieri(gara : Gara){
-    return this.http.put(GareService.getServer() + "gare/associaListe",gara)
-      .map(this.extractData);
-  }
-
-  /**
-   *
-   * @returns {Array<Gara>}
-   *
-   * Ritorna una lista di gare per cui c'e' gia' una classifica, senza tirare su i gruppi e la classifica
-   */
   getGareCompletateLight(anno,tipo: TipoGara) : Observable<Array<Gara>> {
-    return this.http.get(GareService.getServer() + "gare/getGareCompletate?anno="+anno+"&tipo="+tipo.id)
-      .map(this.extractData);
+    return this.http.get(getServer() + "gare/getGareCompletate?anno="+anno+"&tipo="+tipo.id)
+
   }
 
   getGara(gara: Gara) : Observable<Gara>{
-    return this.http.get(GareService.getServer() + "gare/getGara?id="+gara.id)
-      .map(this.extractData);
+    return this.http.get(getServer() + "gare/getGara?id="+gara.id)
+
   }
 
 
-  salvaClassifica(gara: Gara){
-    return this.http.put(GareService.getServer() + "gare/salvaClassifica",gara)
-      .map(this.extractData);
+  salvaClassifica(gara: Gara): any{
+    return this.http.put(getServer() + "gare/salvaClassifica",gara)
+
   }
 
   getGare(anno) : Observable<Array<Gara>> {
-      return this.http.get(GareService.getServer() + "gare/getGare?anno="+anno)
-        .map(this.extractData);
+      return this.http.get(getServer() + "gare/getGare?anno="+anno)
+
   }
 
-  extractData(res){
-    return res.json() || {};
-  }
 
   getTipiGara() : Observable<Array<TipoGara>>{
-    return this.http.get(GareService.getServer() + "gare/getTipi")
-      .map(this.extractData);
+    return this.http.get<Array<TipoGara>>(getServer() + "gare/getTipi")
+
   }
 
   getAnnoSocietario() : Observable<number>{
-    return this.http.get(GareService.getServer() + "gare/getAnnoSocietario")
-      .map(this.extractData);
+    return this.http.get(getServer() + "gare/getAnnoSocietario")
+
   }
 
   getDivisioni(): Observable<Array<Divisione>> {
-    return this.http.get(GareService.getServer() + "gare/getDivisioni")
-      .map(this.extractData);
+    return this.http.get(getServer() + "gare/getDivisioni")
+
   }
 
   getClassifichePerDivisione(gara: Gara): Observable<Array<ClassificaPerDivisione>> {
-    return this.http.post(GareService.getServer() + "gare/getClassifiche",gara)
-      .map(this.extractData);
+    return this.http.post(getServer() + "gare/getClassifiche",gara)
+
   }
 
   getClassificheScontri(gara: Gara): Observable<Array<ClassificaPerDivisione>> {
-    return this.http.post(GareService.getServer() + "gare/getClassificheScontri",gara)
-      .map(this.extractData);
+    return this.http.post(getServer() + "gare/getClassificheScontri",gara)
+
   }
 
   private getClassificaIndoorPerDivisione(anno: number) : Observable<Array<ClassificaPerDivisione>> {
-    return this.http.get(GareService.getServer() + "gare/getClassificaIndoorDivisioni?anno="+anno)
-      .map(this.extractData);
+    return this.http.get(getServer() + "gare/getClassificaIndoorDivisioni?anno="+anno)
+
 
   }
 
 
-  private getClassificaIndoorPerGruppi(anno: number) {
-    return this.http.get(GareService.getServer() + "gare/getClassificaIndoorGruppi?anno="+anno)
-      .map(this.extractData);
+  private getClassificaIndoorPerGruppi(anno: number) : any {
+    return this.http.get(getServer() + "gare/getClassificaIndoorGruppi?anno="+anno)
+
 
   }
 
-  private getClassificaFiocchiPerDivisione(anno: number) {
-    return this.http.get(GareService.getServer() + "gare/getClassificaFiocchiDivisioni?anno="+anno)
-      .map(this.extractData);
+  private getClassificaFiocchiPerDivisione(anno: number) : any{
+    return this.http.get(getServer() + "gare/getClassificaFiocchiDivisioni?anno="+anno)
+
   }
 
-  private getClassificaFiocchiPerGruppi(anno: number) {
-    return this.http.get(GareService.getServer() + "gare/getClassificaFiocchiGruppi?anno="+anno)
-      .map(this.extractData);
+  private getClassificaFiocchiPerGruppi(anno: number): any {
+    return this.http.get(getServer() + "gare/getClassificaFiocchiGruppi?anno="+anno)
+
   }
 
   getClassificaPerDivisione(anno: number,tipo: TipoGara){
@@ -158,18 +138,18 @@ export class GareService {
   }
 
   insertDivisione(divisione: Divisione) : Observable<Divisione>{
-    return this.http.post(GareService.getServer() + "gare/divisioni/add",divisione)
-      .map(this.extractData);
+    return this.http.post(getServer() + "gare/divisioni/add",divisione)
+
   }
 
   updateDivisione(divisione: Divisione){
-    return this.http.post(GareService.getServer() + "gare/divisioni/update",divisione)
-      .map(this.extractData);
+    return this.http.post(getServer() + "gare/divisioni/update",divisione)
+
   }
 
   deleteDivisione(divisione: Divisione){
-    return this.http.post(GareService.getServer() + "gare/divisioni/delete",divisione)
-      .map(this.extractData);
+    return this.http.post(getServer() + "gare/divisioni/delete",divisione)
+
   }
 
   duplicaGruppiGara(gara: Gara) : Observable<GruppiContainer> {
@@ -181,9 +161,9 @@ export class GareService {
     return gara.tipiGara.find(t => t.id == 3 || t.id == 4);
   }
 
-  backupDb(){
-    return this.http.post(GareService.getServer() + "gare/backup" ,"")
-      .map(this.extractData);
+  backupDb() : any{
+    return this.http.post(getServer() + "gare/backup" ,"")
+
   }
 
 
