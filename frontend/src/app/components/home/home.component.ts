@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit {
       else{
         this.wrongLogin=true;
       }
-    }).subscribe();
+    }).take(1).subscribe();
   }
 
 }

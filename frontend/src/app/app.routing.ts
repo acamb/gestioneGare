@@ -18,6 +18,9 @@ import {GestioneDivisioniComponent} from './components/gestione-divisioni/gestio
 import {GironiComponent} from './components/gironi/gironi.component';
 import {AuthGuard} from './resolvers/AuthGuard';
 import {HomeComponent} from './components/home/home.component';
+import {ManageUsersComponent} from "./components/manage-users/manage-users.component";
+import {ChangePasswordComponent} from "./components/change-password/change-password.component";
+import {AdminPanelComponent} from "./components/admin-panel/admin-panel.component";
 
 
 
@@ -109,6 +112,20 @@ const menuRoutes: Routes = [
         path: 'divisioni',
         component: GestioneDivisioniComponent,
         data: { roles: ["ROLE_ADMIN" ] }
+      },
+      {
+        path: 'admin',
+        component: AdminPanelComponent,
+        data: { roles: ["ROLE_ADMIN" ] }
+      },
+      {
+        path: 'utenti',
+        component: ManageUsersComponent,
+        data: { roles: ["ROLE_ADMIN" ] }
+      },
+      {
+        path: 'password',
+        component: ChangePasswordComponent
       },
       {
         path: '',

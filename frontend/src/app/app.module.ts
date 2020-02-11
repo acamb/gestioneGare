@@ -8,6 +8,7 @@ import {
   TooltipModule
 } from "ngx-bootstrap";
 import { SortableModule } from 'ngx-bootstrap/sortable';
+import {environment} from "../environments/environment";
 import { GruppiComponent } from './components/gruppi/gruppi.component';
 import {FormsModule, NgControl} from "@angular/forms";
 import {routing} from "./app.routing";
@@ -46,6 +47,10 @@ import {AuthGuard} from "./resolvers/AuthGuard";
 import {JwtInterceptorService} from "./jwt-interceptor.service";
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import { RestrictedRoleDirective } from './directives/restricted-role.directive';
+import { ManageUsersComponent } from './components/manage-users/manage-users.component';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
+import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
+import {UsersService} from "./users.service";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -80,7 +85,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     GironiComponent,
     BackButtonComponent,
     HomeComponent,
-    RestrictedRoleDirective
+    RestrictedRoleDirective,
+    ManageUsersComponent,
+    ChangePasswordComponent,
+    AdminPanelComponent
   ],
   imports: [
     BrowserModule,
@@ -103,7 +111,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 
   ],
   providers: [HttpClient,GareService,GaraResolver,TipoGaraFiocchiResolver,TipoGaraIndoorResolver,ArcieriListResolver,
-  AuthenticationService,AuthGuard,{
+  AuthenticationService,AuthGuard,UsersService,{
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptorService,
       multi: true
@@ -114,4 +122,9 @@ export class AppModule { }
 
 export function extractData(res){
   return res.json() || {};
+}
+
+export function getServer(): string{
+  let baseUrl = environment.server + environment.context
+  return baseUrl;
 }

@@ -1,0 +1,19 @@
+<div class="alert alert-success" *ngIf="resetPasswordUser">
+  La password dell'utente {{resetPasswordUser}} e' stata resettata
+</div>
+
+<ng-template #template let-item="item">
+  <div class="button-bar">
+    <button class="btn btn-primary btn-sm" (click)="toggleEnable(item)" *appRestrictedRoles="['ROLE_ADMIN']">{{ getEnableButtonText(item)}}</button>
+    <button class="btn btn-primary btn-sm" (click)="resetPassword(item)" *appRestrictedRoles="['ROLE_ADMIN']">Reset password</button>
+  </div>
+</ng-template>
+<app-extensible-data-table [selectable]="true"
+                           [paginated]="true"
+                           [data]="users"
+                           [headers]="headers"
+                           [itemsPerPage]="5"
+                           [itemTemplate]="template"
+></app-extensible-data-table>
+<br/>
+<app-back-button></app-back-button>

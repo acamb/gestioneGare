@@ -20,9 +20,10 @@ public class RestorePasswordAspect {
      * Restore the password of the user passed as argument to the target method from "[PROTECTED]" to the real
      * password before executing the target method
      */
-    @Before("@annotation(RestorePassword)")
-    public void restorePassword(ProceedingJoinPoint joinPoint){
+    @Around("@annotation(RestorePassword)")
+    public Object restorePassword(ProceedingJoinPoint joinPoint) throws Throwable{
         User user = (User)joinPoint.getArgs()[0];
         user.setPassword(userRepository.findByUsername(user.getUsername()).getPassword());
+        return joinPoint.proceed();
     }
 }

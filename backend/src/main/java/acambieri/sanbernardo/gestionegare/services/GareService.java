@@ -15,7 +15,6 @@ import java.util.*;
 import java.util.stream.Stream;
 
 @Component
-@Scope(value="request", proxyMode= ScopedProxyMode.TARGET_CLASS)
 public class GareService {
     @Autowired
     private ArciereRepository arciereRepository;

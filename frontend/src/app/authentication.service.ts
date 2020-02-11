@@ -5,6 +5,7 @@ import {Observable} from 'rxjs/Observable';
 import {Router} from '@angular/router';
 import { User } from './model/User';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import {getServer} from "./app.module";
 
 @Injectable()
 export class AuthenticationService {
@@ -35,7 +36,7 @@ export class AuthenticationService {
    }
 
   authenticate(username: string, password: string): Observable<boolean>{
-    return this.httpClient.post<AuthResponse>(GareService.getServer() + 'auth', {username: username, password: password})
+    return this.httpClient.post<AuthResponse>(getServer() + 'auth', {username: username, password: password})
       .map(resp => {
         if (resp.token === undefined){
           return false;

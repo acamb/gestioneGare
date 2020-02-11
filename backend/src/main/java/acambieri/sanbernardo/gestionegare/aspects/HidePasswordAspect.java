@@ -8,6 +8,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @Aspect
 public class HidePasswordAspect {
@@ -31,6 +33,9 @@ public class HidePasswordAspect {
             else{
                 user = null;
             }
+        }
+        else if(result instanceof List && ((List) result).size() > 0 && ((List) result).get(0) instanceof User){
+            ((List<User>)result).forEach(u->u.setPassword("[PROTECTED]"));
         }
         else if(result instanceof User){
             user = (User)result;
