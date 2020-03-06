@@ -30,6 +30,9 @@ public class DbUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsernameAndActiveIsTrue(username);
         List<GrantedAuthority> authorities = new ArrayList<>();
+        if(user == null){
+            throw new UsernameNotFoundException("User not found");
+        }
         if(user.getRoles() != null) {
             user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority( role.getName())));
         }

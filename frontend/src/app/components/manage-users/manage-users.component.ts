@@ -9,12 +9,12 @@ import {UsersService} from "../../users.service";
 })
 export class ManageUsersComponent implements OnInit {
 
-  private users:Array<User>;
-  private resetPasswordUser: string;
+  users:Array<User>;
+  resetPasswordUser: string;
 
   constructor(private userService: UsersService) { }
 
-  private headers={username:"username",active:"attivo"};
+  headers={username:"username",active:"attivo"};
 
   ngOnInit() {
     this.getUsers();
