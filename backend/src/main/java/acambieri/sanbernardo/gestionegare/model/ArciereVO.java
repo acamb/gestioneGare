@@ -1,5 +1,8 @@
 package acambieri.sanbernardo.gestionegare.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
@@ -8,6 +11,8 @@ public class ArciereVO extends Arciere{
 
     @Transient
     private int punteggio;
+    @Transient
+    private List<Integer> punteggi=new ArrayList<>();
     @Transient
     private Double sommaPuntiNormalizzata;
     @Transient
@@ -68,5 +73,15 @@ public class ArciereVO extends Arciere{
     public int hashCode() {
         return super.hashCode();
     }
+
+    public List<Integer> getPunteggi() {
+        return punteggi;
+    }
+
+    public void setPunteggi(List<Integer> punteggi) {
+        this.punteggi = punteggi;
+    }
+
+    
 
 }

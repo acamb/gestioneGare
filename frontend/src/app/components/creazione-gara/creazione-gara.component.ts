@@ -6,8 +6,8 @@ import {GruppiContainer} from "../../model/GruppiContainer";
 import {SelectableItem} from "../../model/SelectableItem";
 import {Observable} from "rxjs/Observable";
 import 'rxjs/add/operator/toPromise';
-import {Gara} from "../../model/Gara";
 import {Router} from "@angular/router";
+import {Gara, TemplateGara} from "../../model/Gara";
 import {Divisione} from "../../model/Divisione";
 import {init} from "protractor/built/launcher";
 import {StickyOnScrollDirective} from "../../directives/sticky-on-scroll.directive";
@@ -35,11 +35,15 @@ export class CreazioneGaraComponent implements OnInit {
   checked=[];
   headersDivisioni= { descrizione: "descrizione"};
   numeroCoppie=1;
+  templateGara: Observable<Array<TemplateGara>>;
+  selectedTemplateGara: TemplateGara;
 
   @ViewChild('duplicaModal') modal;
 
   constructor(private gareService : GareService,private router: Router) {
     this.tipiGara = this.gareService.getTipiGara();
+    this.templateGara = this.gareService.getTemplateGare();
+
   }
 
   async init(){
@@ -86,6 +90,9 @@ export class CreazioneGaraComponent implements OnInit {
 
   ngOnInit() {
     this.init();
+    if ( this.garaDaEditare.id != undefined){
+      this.selectedTemplateGara = this.garaDaEditare.templateGara;
+    }
   }
 
   toggleTipo(tipo: TipoGara){
@@ -115,6 +122,7 @@ export class CreazioneGaraComponent implements OnInit {
 
   async salva() {
     this.saving = true;
+    this.garaDaEditare.templateGara = this.selectedTemplateGara;
     if (!this.edit) {
       this.garaDaEditare = await this.gareService.salvaGara(this.garaDaEditare).toPromise();
     }
@@ -138,5 +146,11 @@ export class CreazioneGaraComponent implements OnInit {
       return;
     }
     this.garaDaEditare.divisioni.push(divisione);
+  }
+  compareTemplate = (a: TemplateGara,b: TemplateGara) => {
+    if (a === undefined || b === undefined){
+      return false;
+    }
+    return a.id === b.id;
   }
 }

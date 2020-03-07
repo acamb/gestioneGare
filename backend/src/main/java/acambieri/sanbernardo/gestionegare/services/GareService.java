@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
@@ -28,6 +29,8 @@ public class GareService {
     private TipoGaraRepository tipoGaraRepository;
     @Autowired
     private ConfigurazioneRepository configurazioneRepository;
+    @Autowired
+    private TemplateGaraRepository templateGaraRepository;
 
 
     public GaraVO salvaGara(GaraVO gara){
@@ -59,6 +62,10 @@ public class GareService {
                         .setEscludiClassifica(arciere.isEscludiClassifica())
                         .setGruppo(gruppo)
                         .setPunteggio(arciere.getPunteggio())
+                        .setPunteggi(arciere.getPunteggi()
+                                            .stream()
+                                            .map(p -> new Punteggio().setPunteggio(p)) //TODO[AC] devo settare anche la partecipazione?
+                                            .collect(Collectors.toList()))
                 )
         );
         return partecipazioni;
@@ -66,6 +73,10 @@ public class GareService {
 
     public GaraVO getGara(Gara gara){
         Gara saved = garaRepository.findById(gara.getId()).get();
+        /*//Compatibilita': una gara con 1 solo punteggio ha comunque la struttura dei punteggi con il suo punteggio singolo
+        saved.getPartecipazioni().stream()
+        .filter(p -> p.getPunteggi().size() == 0)
+        .forEach(p -> p.getPunteggi().add(p.getPunteggio()));*/
         return new GaraVO(saved,saved.getPartecipazioni());
     }
 
@@ -171,7 +182,7 @@ public class GareService {
             }
             map.get(record.getDivisione()).add(new ArciereVO(record));
         }
-        List<Divisione> keyset = new ArrayList(map.keySet());
+        List<Divisione> keyset = new ArrayList<>(map.keySet());
         keyset.sort(new Comparator<Divisione>() {
             @Override
             public int compare(Divisione o1, Divisione o2) {
@@ -230,5 +241,20 @@ public class GareService {
             return null;
         }
         return b.toString();
+    }
+
+    public List<TemplateGara> getGareTemplate(){
+        List<TemplateGara> result = new ArrayList<>();
+        templateGaraRepository.findAll().forEach(result::add);
+        return result;
+    }
+
+    public List<String> getTemplatePunti(int id){
+        TemplateGara template = templateGaraRepository.findById(id).get();
+        return template.getTemplatePunti()
+            .stream()
+            .sorted((t,t2) -> t.getOrdine()-t2.getOrdine())
+            .map(t -> t.getDescrizione())
+            .collect(Collectors.toList());
     }
 }

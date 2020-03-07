@@ -21,6 +21,7 @@ import {HomeComponent} from './components/home/home.component';
 import {ManageUsersComponent} from "./components/manage-users/manage-users.component";
 import {ChangePasswordComponent} from "./components/change-password/change-password.component";
 import {AdminPanelComponent} from "./components/admin-panel/admin-panel.component";
+import { TemplatePuntiResolver } from './resolvers/TemplatePuntiResolver';
 
 
 
@@ -44,7 +45,8 @@ const menuRoutes: Routes = [
         path: "classifica/:id",
         component: ClassificaGaraComponent,
         resolve: {
-          gara: GaraResolver
+          gara: GaraResolver,
+          templatePunti: TemplatePuntiResolver
         }
       },
       {

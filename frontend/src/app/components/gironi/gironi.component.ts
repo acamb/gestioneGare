@@ -35,8 +35,8 @@ export class GironiComponent implements OnInit {
   }
 
   applicaAlgoritmoDiBerger(arcieri: Array<Arciere>) : Array<Turno>{
-    let bye = {nome: 'BYE',cognome: null,divisione: null,id: 0,punteggio: 0,sesso: null,escludiClassifica:false};
-    let turni = new Array<Turno>();
+    const bye = {nome: 'BYE',cognome: null,divisione: null,id: 0,punteggio: 0,sesso: null,escludiClassifica:false,punteggi: Array<number>()};
+    const turni = new Array<Turno>();
     if(arcieri.length % 2 ){
        arcieri.push(bye);
      }

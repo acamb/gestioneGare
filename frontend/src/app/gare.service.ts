@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Arciere} from "./model/Arciere";
 import {TipoGara} from "./model/TipoGara";
-import {Gara} from "./model/Gara";
+import {Gara, TemplateGara} from "./model/Gara";
 import {Observable} from "rxjs/Observable";
 import {HttpClient} from "@angular/common/http";
 
@@ -30,7 +30,7 @@ export class GareService {
 
 
   getArcieri(): Observable<Array<Arciere>> {
-     return this.http.get(getServer() + "gare/getArcieri")
+     return this.http.get<Array<Arciere>>(getServer() + "gare/getArcieri")
 
   }
 
@@ -164,6 +164,14 @@ export class GareService {
   backupDb() : any{
     return this.http.post(getServer() + "gare/backup" ,"")
 
+  }
+
+  getTemplateGare(){
+    return this.http.post<Array<TemplateGara>>(getServer() + "gare/getTemplateGare","")
+  }
+
+  getTemplatePunti( gara: Gara ) : Observable<Array<string>> {
+    return this.http.get<Array<string>>(getServer() + "gare/getTemplatePunti?id="+gara.id);
   }
 
 

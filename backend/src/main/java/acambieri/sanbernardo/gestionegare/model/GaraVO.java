@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 public class GaraVO extends Gara {
@@ -33,6 +34,7 @@ public class GaraVO extends Gara {
         this.divisioni = gara.divisioni;
         this.punteggioMassimo = gara.punteggioMassimo;
         this.completata = gara.completata;
+        this.templateGara = gara.templateGara;
     }
 
     public GaraVO(Gara gara,List<Partecipazione> conf){
@@ -40,6 +42,8 @@ public class GaraVO extends Gara {
         conf.stream().forEach(configurazione -> {
             ArciereVO arciere = new ArciereVO(configurazione.getArciere());
             arciere.setPunteggio(configurazione.getPunteggio());
+            //TODO[AC] risalgono nell'ordine giusto?
+            arciere.setPunteggi(configurazione.getPunteggi().stream().map(p -> p.getPunteggio()).collect(Collectors.toList()));
             arciere.setDivisione(configurazione.getDivisione());
             switch(configurazione.getGruppo()){
                 case "A":

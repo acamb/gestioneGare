@@ -27,7 +27,9 @@ public class Gara {
     protected boolean completata;
     protected int punteggioMassimo;
     @OneToMany(cascade = {PERSIST,DETACH,MERGE,REFRESH})
-    private List<Partecipazione> partecipazioni;
+    protected List<Partecipazione> partecipazioni;
+    @ManyToOne
+    protected TemplateGara templateGara;
 
     public int getPunteggioMassimo() {
         return punteggioMassimo;
@@ -92,4 +94,14 @@ public class Gara {
     public void setPartecipazioni(List<Partecipazione> partecipazioni) {
         this.partecipazioni = partecipazioni;
     }
+
+    public TemplateGara getTemplateGara() {
+        return templateGara;
+    }
+
+    public void setTemplateGara(TemplateGara templateGara) {
+        this.templateGara = templateGara;
+    }
+
+    
 }

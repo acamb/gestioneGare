@@ -11,8 +11,17 @@
     <td><b>{{gruppoVal.indexOf(arciere)+1}}</b></td>
       <td>{{arciere.cognome}}</td>
     <td>{{arciere.nome}}</td>
-    <td *ngIf="canModify"><input type="number" [(ngModel)]="arciere.punteggio" (change)="propagate()" /></td>
-    <td *ngIf="!canModify">{{arciere.punteggio}}</td>
+    <td *ngIf="canModify">
+      <div *ngFor="let punti of arciere.punteggi;let idx = index; trackBy: trackByIdx" >
+        {{templatePunti[idx]}}
+        <input [(ngModel)]="arciere.punteggi[idx]" (blur)="propagate(arciere)" size="4"/>
+    </div>
+    </td>
+    <td *ngIf="!canModify">
+      <span *ngFor="let punti of arciere.punteggi;let idx = index;">
+        {{arciere.punteggi[idx] + ' '}}
+      </span>
+    </td>
   </tr>
   </tbody>
 </table>

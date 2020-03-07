@@ -29,12 +29,26 @@ export class TableClassificaComponent implements OnInit {
   @Input()
   canModify: boolean = false;
 
+  @Input()
+  templatePunti : Array<string>;
+
   constructor() { }
 
   ngOnInit() {
   }
 
-  propagate() {
+  propagate(arciere) {
+    //devo ricalcolare il punteggio totale partendo dagli scomposti
+    let punteggioString = "";
+    for(let p of arciere.punteggi){
+      punteggioString += "" + p;
+    }
+    arciere.punteggio = parseInt(punteggioString.trim());
     this.gruppoChange.emit(this.gruppoVal);
+  }
+
+  //necessario per far usare l'indice all'ngFor invece che l'identity
+  trackByIdx(index: number, obj: any): any {
+    return index;
   }
 }

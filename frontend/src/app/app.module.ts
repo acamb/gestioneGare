@@ -51,6 +51,7 @@ import { ManageUsersComponent } from './components/manage-users/manage-users.com
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 import {UsersService} from "./users.service";
+import {TemplatePuntiResolver} from "./resolvers/TemplatePuntiResolver";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -115,7 +116,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptorService,
       multi: true
-    }],
+    },TemplatePuntiResolver],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -142,4 +142,14 @@ public class GareController {
     public GenericResponseWithPayload backup(){
         return new GenericResponseWithPayload<>(service.doBackup());
     }
+
+    @PostMapping(value = "/getTemplateGare")
+    public List<TemplateGara> getGareTemplate(){
+        return service.getGareTemplate();
+    }
+
+    @GetMapping(value = "/getTemplatePunti")
+    public List<String> getTemplatePunti(@RequestParam int id){
+        return service.getTemplatePunti(id);
+    }
 }

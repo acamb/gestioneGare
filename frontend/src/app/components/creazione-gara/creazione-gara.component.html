@@ -30,6 +30,14 @@
                                                          />{{tipo.nome}}</span>
     </div>
   </div>
+  <div class="form-group">
+    <label class="col-md-3">Template punteggi</label>
+    <div class="col-md-9">
+      <select [(ngModel)]="selectedTemplateGara" id="templateGara" name="templateGara" required [compareWith]="compareTemplate">
+        <option *ngFor="let template of templateGara | async" [ngValue]="template">{{template.descrizione}}</option>
+      </select>
+    </div>
+  </div>
   <div class="form-group"  >
     <label class="col-md-3">Divisioni</label>
     <div class="col-md-9" >

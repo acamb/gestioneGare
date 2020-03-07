@@ -7,6 +7,7 @@ export interface Arciere{
   cognome: String;
   id: number;
   punteggio: number;
+  punteggi: Array<number>;
   sesso: string;
   divisione: Divisione;
   escludiClassifica: boolean;

@@ -14,26 +14,30 @@
 <div class="col-md-12" *ngIf="modifica">
   <div class="col-md-12">
     <app-table-classifica [(gruppo)]="gara.gruppoA1" [canModify]="modifica"
-                          [descrizione]="'gruppo A'"></app-table-classifica>
+                          [descrizione]="'gruppo A'"
+                          [templatePunti]="templatePunti"></app-table-classifica>
   </div>
   <div class="col-md-12" *ngIf="gara.gruppoA2 && gara.gruppoA2.length > 0">
     <app-table-classifica [(gruppo)]="gara.gruppoA2" [canModify]="modifica"
-                          [descrizione]="'gruppo B2'"></app-table-classifica>
+                          [descrizione]="'gruppo B2'"
+                          [templatePunti]="templatePunti"></app-table-classifica>
   </div>
   <div class="col-md-12">
     <app-table-classifica [(gruppo)]="gara.gruppoB1" [canModify]="modifica"
-                          [descrizione]="'gruppo B'"></app-table-classifica>
+                          [descrizione]="'gruppo B'"
+                          [templatePunti]="templatePunti"></app-table-classifica>
   </div>
   <div class="col-md-12" *ngIf="gara.gruppoB2 && gara.gruppoB2.length > 0">
     <app-table-classifica [(gruppo)]="gara.gruppoB2" [canModify]="modifica"
-                          [descrizione]="'gruppo B2'"></app-table-classifica>
+                          [descrizione]="'gruppo B2'"
+                          [templatePunti]="templatePunti"></app-table-classifica>
   </div>
 </div>
 <div class="col-md-12" *ngIf="!modifica && !isGaraScontri(gara)">
   <app-classifiche-per-divisione-container [classifiche]="classifichePerDivisione"></app-classifiche-per-divisione-container>
 </div>
 <div class="col-md-12" *ngIf="!modifica && isGaraScontri(gara)">
-  <app-classifiche-per-divisione-container [classifiche]="classifichePerGruppi"></app-classifiche-per-divisione-container>
+  <app-classifiche-per-divisione-container [classifiche]="classifichePerGruppi"  [templatePunti]="templatePunti"></app-classifiche-per-divisione-container>
 </div>
 <div class="col-md-4">
   <button class="btn btn-primary print-hidden" [disabled]="modifica" (click)="toggleModifica()" *appRestrictedRoles="['ROLE_EDIT','ROLE_ADMIN']">

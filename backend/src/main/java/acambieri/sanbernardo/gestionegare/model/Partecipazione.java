@@ -1,7 +1,17 @@
 package acambieri.sanbernardo.gestionegare.model;
 
-import javax.persistence.*;
-import java.text.ParseException;
+import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+import static javax.persistence.CascadeType.*;
+
 
 @Entity
 public class Partecipazione {
@@ -14,6 +24,8 @@ public class Partecipazione {
     private Arciere arciere;
     private String gruppo;
     private int punteggio;
+    @OneToMany(cascade = {PERSIST,DETACH,MERGE,REFRESH,REMOVE})
+    private List<Punteggio> punteggi;
     @OneToOne
     private Divisione divisione;
     private boolean escludiClassifica;
@@ -79,4 +91,15 @@ public class Partecipazione {
         this.punteggio = punteggio;
         return this;
     }
+
+    public List<Punteggio> getPunteggi() {
+        return punteggi;
+    }
+
+    public Partecipazione setPunteggi(List<Punteggio> punteggi) {
+        this.punteggi = punteggi;
+        return this;
+    }
+
+    
 }
