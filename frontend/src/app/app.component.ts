@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {GareService} from "./gare.service";
 import * as FileSaver from 'file-saver';
+import { AuthenticationService } from './authentication.service';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,7 @@ import * as FileSaver from 'file-saver';
 export class AppComponent {
   title = 'app';
 
-  constructor(private gareService: GareService){
+  constructor(private gareService: GareService,private authService: AuthenticationService){
 
   }
 
@@ -18,5 +19,9 @@ export class AppComponent {
     let payload = await this.gareService.backupDb().toPromise();
     let data = new Blob([payload.payload],{ type: 'text/plain;charset=utf-8' });
     FileSaver.saveAs(data, 'backup.sql');
+  }
+
+  logout(){
+    this.authService.logout();
   }
 }

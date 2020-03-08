@@ -19,6 +19,7 @@
         <li><a routerLink="/admin" routerLinkActive="activeRoute" *appRestrictedRoles="['ROLE_ADMIN']">Admin</a></li>
         <li><a routerLink="/password" routerLinkActive="activeRoute">Password</a></li>
         <li><a (click)="backupDb()" *appRestrictedRoles="['ROLE_EDIT','ROLE_ADMIN']">Backup</a> </li>
+        <li><a (click)="logout()">Logout</a> </li>
       </ul>
     </div>
   </div>
