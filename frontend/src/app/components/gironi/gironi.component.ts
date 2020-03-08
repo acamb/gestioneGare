@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {Gara} from "../../model/Gara";
 import {Scontro, Turno} from "../../model/Turno";
-import {Arciere} from "../../model/Arciere";
+import {Arciere, Punteggio} from "../../model/Arciere";
 import {areIterablesEqual} from "@angular/core/src/change_detection/change_detection_util";
 
 @Component({
@@ -35,7 +35,7 @@ export class GironiComponent implements OnInit {
   }
 
   applicaAlgoritmoDiBerger(arcieri: Array<Arciere>) : Array<Turno>{
-    const bye = {nome: 'BYE',cognome: null,divisione: null,id: 0,punteggio: 0,sesso: null,escludiClassifica:false,punteggi: Array<number>()};
+    const bye = {nome: 'BYE',cognome: null,divisione: null,id: 0,punteggio: 0,sesso: null,escludiClassifica:false,punteggi: Array<Punteggio>()};
     const turni = new Array<Turno>();
     if(arcieri.length % 2 ){
        arcieri.push(bye);

@@ -12,7 +12,7 @@ public class ArciereVO extends Arciere{
     @Transient
     private int punteggio;
     @Transient
-    private List<Integer> punteggi=new ArrayList<>();
+    private List<Punteggio> punteggi=new ArrayList<>();
     @Transient
     private Double sommaPuntiNormalizzata;
     @Transient
@@ -40,6 +40,7 @@ public class ArciereVO extends Arciere{
         this(conf.getArciere());
         this.punteggio = conf.getPunteggio();
         this.divisione = conf.getDivisione();
+        this.punteggi = conf.getPunteggi();
     }
 
     public Double getSommaPuntiNormalizzata() {
@@ -74,11 +75,11 @@ public class ArciereVO extends Arciere{
         return super.hashCode();
     }
 
-    public List<Integer> getPunteggi() {
+    public List<Punteggio> getPunteggi() {
         return punteggi;
     }
 
-    public void setPunteggi(List<Integer> punteggi) {
+    public void setPunteggi(List<Punteggio> punteggi) {
         this.punteggi = punteggi;
     }
 

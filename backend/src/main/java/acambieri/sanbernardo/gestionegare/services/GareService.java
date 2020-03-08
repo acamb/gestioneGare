@@ -3,6 +3,8 @@ package acambieri.sanbernardo.gestionegare.services;
 import acambieri.sanbernardo.gestionegare.CalcoloPunteggiBL;
 import acambieri.sanbernardo.gestionegare.model.*;
 import acambieri.sanbernardo.gestionegare.repositories.*;
+import org.hibernate.Hibernate;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -31,11 +33,25 @@ public class GareService {
     private ConfigurazioneRepository configurazioneRepository;
     @Autowired
     private TemplateGaraRepository templateGaraRepository;
+    @Autowired
+    private PunteggioRepository punteggioRepository;
 
 
     public GaraVO salvaGara(GaraVO gara){
         creaPartecipazioni(gara);
         Gara saved = garaRepository.save(gara);
+        saved.getPartecipazioni()
+                .stream()
+                .map(partecipazione -> {
+                    Partecipazione savedPartecipazione = partecipazioneRepository.save(partecipazione);
+                    partecipazione.getPunteggi().forEach(punteggio -> punteggio.setPartecipazione(savedPartecipazione));
+                    return savedPartecipazione;
+                })
+                .map(p -> p.getPunteggi())
+                .flatMap(p->p.stream())
+                .forEach(punteggio ->
+                    punteggioRepository.save(punteggio)
+                );
         return new GaraVO(saved,saved.getPartecipazioni());
     }
 
@@ -54,19 +70,29 @@ public class GareService {
 
     private List<Partecipazione> creaPartecipazioniGruppo(Gara gara,List<ArciereVO> arcieri,String gruppo){
         List<Partecipazione> partecipazioni = new ArrayList<>();
-        arcieri.forEach(arciere ->
-                partecipazioni.add(new Partecipazione()
-                        .setArciere(arciere)
-                        .setDivisione(arciere.getDivisione())
-                        .setGara(gara)
-                        .setEscludiClassifica(arciere.isEscludiClassifica())
-                        .setGruppo(gruppo)
-                        .setPunteggio(arciere.getPunteggio())
-                        .setPunteggi(arciere.getPunteggi()
-                                            .stream()
-                                            .map(p -> new Punteggio().setPunteggio(p)) //TODO[AC] devo settare anche la partecipazione?
-                                            .collect(Collectors.toList()))
-                )
+        arcieri.forEach(arciere -> {
+                Partecipazione partecipazione = new Partecipazione()
+                .setArciere(arciere)
+                .setDivisione(arciere.getDivisione())
+                .setGara(gara)
+                .setEscludiClassifica(arciere.isEscludiClassifica())
+                .setGruppo(gruppo)
+                .setPunteggio(arciere.getPunteggio());
+                partecipazione.setPunteggi(arciere.getPunteggi()
+                                .stream()
+                                .map(p -> p.setPartecipazione(partecipazione)
+                                           .setTemplatePunteggio(gara.getTemplateGara().getTemplatePunti().get(
+                                                arciere.getPunteggi().indexOf(p)
+                                                                 ))
+                                ).collect(Collectors.toList()));
+                for(int i = partecipazione.getPunteggi().size();i<gara.getTemplateGara().getPunteggi();i++){
+                    partecipazione.getPunteggi().add(new Punteggio()
+                            .setPunteggio(0)
+                            .setPartecipazione(partecipazione)
+                            .setTemplatePunteggio(gara.getTemplateGara().getTemplatePunti().get(i)));
+                }
+                partecipazioni.add(partecipazione);
+            }
         );
         return partecipazioni;
     }
@@ -106,6 +132,7 @@ public class GareService {
         ).flatMap(arciere -> arciere)
                 .forEach(arciere -> {
                     partecipazioneRepository.updatePunteggio(gara.getId(),arciere.getId(),arciere.getPunteggio());
+                    arciere.getPunteggi().forEach(punteggio -> punteggioRepository.updatePunteggio(punteggio.getId(),punteggio.getPunteggio()));
                 });
         garaRepository.setCompletata(gara.getId());
         Gara saved = garaRepository.findById(gara.getId()).get();
@@ -249,9 +276,9 @@ public class GareService {
         return result;
     }
 
-    public List<String> getTemplatePunti(int id){
-        TemplateGara template = templateGaraRepository.findById(id).get();
-        return template.getTemplatePunti()
+    public List<String> getTemplatePunti(Long id){
+        Gara gara = garaRepository.findById(id).get();
+        return gara.getTemplateGara().getTemplatePunti()
             .stream()
             .sorted((t,t2) -> t.getOrdine()-t2.getOrdine())
             .map(t -> t.getDescrizione())

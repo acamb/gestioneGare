@@ -41,7 +41,7 @@ export class TableClassificaComponent implements OnInit {
     //devo ricalcolare il punteggio totale partendo dagli scomposti
     let punteggioString = "";
     for(let p of arciere.punteggi){
-      punteggioString += "" + p;
+      punteggioString += "" + p.punteggio;
     }
     arciere.punteggio = parseInt(punteggioString.trim());
     this.gruppoChange.emit(this.gruppoVal);

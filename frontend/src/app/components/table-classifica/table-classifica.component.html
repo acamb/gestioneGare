@@ -14,12 +14,12 @@
     <td *ngIf="canModify">
       <div *ngFor="let punti of arciere.punteggi;let idx = index; trackBy: trackByIdx" >
         {{templatePunti[idx]}}
-        <input [(ngModel)]="arciere.punteggi[idx]" (blur)="propagate(arciere)" size="4"/>
+        <input [(ngModel)]="arciere.punteggi[idx].punteggio" (blur)="propagate(arciere)" size="4"/>
     </div>
     </td>
     <td *ngIf="!canModify">
       <span *ngFor="let punti of arciere.punteggi;let idx = index;">
-        {{arciere.punteggi[idx] + ' '}}
+        {{arciere.punteggi[idx].punteggio + ' '}}
       </span>
     </td>
   </tr>

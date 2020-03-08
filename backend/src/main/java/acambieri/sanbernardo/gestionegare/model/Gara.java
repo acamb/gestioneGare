@@ -26,7 +26,7 @@ public class Gara {
     protected Set<Divisione> divisioni;
     protected boolean completata;
     protected int punteggioMassimo;
-    @OneToMany(cascade = {PERSIST,DETACH,MERGE,REFRESH})
+    @OneToMany(mappedBy = "gara")
     protected List<Partecipazione> partecipazioni;
     @ManyToOne
     protected TemplateGara templateGara;

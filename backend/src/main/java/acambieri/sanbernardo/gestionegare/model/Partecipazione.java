@@ -2,13 +2,7 @@ package acambieri.sanbernardo.gestionegare.model;
 
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 import static javax.persistence.CascadeType.*;
 
@@ -20,13 +14,14 @@ public class Partecipazione {
     private Long id;
     @ManyToOne
     private Gara gara;
-    @OneToOne
+    @ManyToOne
     private Arciere arciere;
     private String gruppo;
+    @Column(name="punteggio_singolo")
     private int punteggio;
-    @OneToMany(cascade = {PERSIST,DETACH,MERGE,REFRESH,REMOVE})
+    @OneToMany(mappedBy = "partecipazione",fetch = FetchType.EAGER)
     private List<Punteggio> punteggi;
-    @OneToOne
+    @ManyToOne
     private Divisione divisione;
     private boolean escludiClassifica;
 

@@ -149,7 +149,7 @@ public class GareController {
     }
 
     @GetMapping(value = "/getTemplatePunti")
-    public List<String> getTemplatePunti(@RequestParam int id){
+    public List<String> getTemplatePunti(@RequestParam Long id){
         return service.getTemplatePunti(id);
     }
 }

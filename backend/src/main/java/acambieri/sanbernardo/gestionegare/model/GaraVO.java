@@ -43,7 +43,7 @@ public class GaraVO extends Gara {
             ArciereVO arciere = new ArciereVO(configurazione.getArciere());
             arciere.setPunteggio(configurazione.getPunteggio());
             //TODO[AC] risalgono nell'ordine giusto?
-            arciere.setPunteggi(configurazione.getPunteggi().stream().map(p -> p.getPunteggio()).collect(Collectors.toList()));
+            arciere.setPunteggi(configurazione.getPunteggi());
             arciere.setDivisione(configurazione.getDivisione());
             switch(configurazione.getGruppo()){
                 case "A":
