@@ -3,6 +3,7 @@ package acambieri.sanbernardo.gestionegare.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +28,7 @@ public class Gara {
     protected boolean completata;
     protected int punteggioMassimo;
     @OneToMany(mappedBy = "gara")
-    protected List<Partecipazione> partecipazioni;
+    protected List<Partecipazione> partecipazioni = new ArrayList<>();
     @ManyToOne
     protected TemplateGara templateGara;
 

@@ -38,30 +38,31 @@ public class GareService {
 
 
     public GaraVO salvaGara(GaraVO gara){
+        Gara saved = gara.getId() == null ? null : garaRepository.findById(gara.getId()).get();
+        boolean hasPartecipazioni = saved != null && saved.getId() != null && (saved.getPartecipazioni() == null ? false : saved.getPartecipazioni().size() > 0);
+        if(hasPartecipazioni){
+            partecipazioneRepository.deleteAllByGaraId(saved.getId());
+            saved.setPartecipazioni(new ArrayList<>());
+            garaRepository.save(saved);
+        }
+        final Gara savedWithPartecipazioni = garaRepository.save(gara);
         creaPartecipazioni(gara);
-        Gara saved = garaRepository.save(gara);
-        saved.getPartecipazioni()
+        gara.getPartecipazioni()
                 .stream()
-                .map(partecipazione -> {
+                .forEach(partecipazione -> {
+                    partecipazione.setGara(savedWithPartecipazioni);
                     Partecipazione savedPartecipazione = partecipazioneRepository.save(partecipazione);
-                    partecipazione.getPunteggi().forEach(punteggio -> punteggio.setPartecipazione(savedPartecipazione));
-                    return savedPartecipazione;
-                })
-                .map(p -> p.getPunteggi())
-                .flatMap(p->p.stream())
-                .forEach(punteggio ->
-                    punteggioRepository.save(punteggio)
-                );
+                    partecipazione.getPunteggi().forEach(punteggio -> {
+                        punteggio.setPartecipazione(savedPartecipazione);
+                        punteggioRepository.save(punteggio);
+                    });
+                });
+        savedWithPartecipazioni.setPartecipazioni(gara.getPartecipazioni());
+        saved=garaRepository.save(savedWithPartecipazioni);
         return new GaraVO(saved,saved.getPartecipazioni());
     }
 
     private void creaPartecipazioni(GaraVO gara){
-        boolean hasPartecipazioni = gara.getId() == null ? false : garaRepository.findById(gara.getId()).get().getPartecipazioni().size() > 0;
-        if(hasPartecipazioni){
-            partecipazioneRepository.deleteAllByGaraId(gara.getId());
-
-        }
-        gara.setPartecipazioni(new ArrayList<>());
         gara.getPartecipazioni().addAll(creaPartecipazioniGruppo(gara,gara.getGruppoA1(),"A1"));
         gara.getPartecipazioni().addAll(creaPartecipazioniGruppo(gara,gara.getGruppoA2(),"A2"));
         gara.getPartecipazioni().addAll(creaPartecipazioniGruppo(gara,gara.getGruppoB1(),"B1"));

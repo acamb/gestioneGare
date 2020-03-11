@@ -60,6 +60,7 @@ object CalcoloPunteggiBL {
                 if (!punteggi.containsKey(c.arciere)) {
                     if (gruppi) {
                         val arciereVO = ArciereVO(c)
+                        arciereVO.divisione = Divisione()
                         /*arciereVO.divisione.id = (if ("A" == c.gruppo) -1 else -2).toLong()
                         arciereVO.divisione.descrizione = if ("A" == c.gruppo) "Gruppo A" else "Gruppo B"*/
                         when{
