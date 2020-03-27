@@ -28,9 +28,15 @@ export class AuthenticationService {
       return false;
     }
     const date = new Date(0);
-    const exp = jwt_decode(sessionStorage.getItem('token')).exp;
-    date.setUTCSeconds(exp);
-    return new Date().valueOf() < date.valueOf();
+    try {
+      const exp = jwt_decode(sessionStorage.getItem('token')).exp;
+      date.setUTCSeconds(exp);
+      const valid = new Date().valueOf() < date.valueOf()
+      return valid;
+    }
+    catch(error){
+      return false;
+    }
   }
 
   get token(){
@@ -38,7 +44,8 @@ export class AuthenticationService {
   }
 
   logout(){
-    sessionStorage.clear();
+    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('token');
     this.subject.next(undefined);
     this.goToLogin();
   }
@@ -59,6 +66,8 @@ export class AuthenticationService {
         sessionStorage.setItem('token', 'Bearer ' + resp.token);
         this.subject.next(resp.user);
         return true;
+      },error => {
+        return false;
       })
   }
 

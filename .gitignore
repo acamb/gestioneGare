@@ -7,3 +7,7 @@
 /backend/out
 .idea/
 /frontend/*.iml
+/backend/src/main/resources/application_prod.properties
+/backend/bin
+/backend/db
+/.vscode

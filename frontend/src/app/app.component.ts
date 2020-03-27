@@ -12,7 +12,13 @@ export class AppComponent {
   title = 'app';
 
   constructor(private gareService: GareService,private authService: AuthenticationService){
-
+      this.authService.userObservable.subscribe(
+        user =>{
+          if(user){
+            this.gareService.initTipi();
+          }
+        }
+      );
   }
 
   async backupDb(){

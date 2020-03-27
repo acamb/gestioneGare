@@ -126,6 +126,7 @@ export function extractData(res){
 }
 
 export function getServer(): string{
-  let baseUrl = environment.server + environment.context
+  let getUrl = window.location;
+  let baseUrl = getUrl .protocol + "//" + getUrl.host + environment.context
   return baseUrl;
 }

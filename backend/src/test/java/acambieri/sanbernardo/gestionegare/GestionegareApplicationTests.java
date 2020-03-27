@@ -33,9 +33,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
 public class GestionegareApplicationTests {
+/*
 
 	private MockMvc mvc;
 	@Value("${jwt.secret}")
@@ -59,6 +60,8 @@ public class GestionegareApplicationTests {
 				.addFilter(springSecurityFilterChain)
 				.build();
 	}
+*/
+/*
 
 	@Test
 	public void testNotAuthorized() throws Exception {
@@ -71,6 +74,7 @@ public class GestionegareApplicationTests {
 		assertNotNull(token);
 		mvc.perform(MockMvcRequestBuilders.get("/gare/getGare?anno=2020").header("Authorization", token)).andExpect(status().isOk());
 	}
+*/
 
 	/*@Test
 	public void viewRole_editEndpoint_notAuthorized()throws Exception{
@@ -93,10 +97,10 @@ public class GestionegareApplicationTests {
 				.header("Authorization", token))
 				.andExpect(status().isOk());
 	}*/
-
+/*
 	private String initToken(String username){
 		UserDetails userDetails=userDetailsService.loadUserByUsername(username);
 		return "Bearer " + generateToken(userDetails,tokenValidity,jwtSecret);
-	}
+	}*/
 
 }

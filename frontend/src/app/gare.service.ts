@@ -18,7 +18,7 @@ export class GareService {
   mapTipi = new Map<string,TipoGara>();
 
   constructor(private http: HttpClient) {
-    this.initTipi();
+
   }
 
   initTipi(){
