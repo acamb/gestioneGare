@@ -55,7 +55,7 @@ public class Divisione {
 
         Divisione divisione = (Divisione) o;
 
-        return id == divisione.id;
+        return id.equals(divisione.id);
     }
 
     @Override

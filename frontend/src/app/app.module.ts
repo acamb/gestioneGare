@@ -52,6 +52,7 @@ import { ChangePasswordComponent } from './components/change-password/change-pas
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 import {UsersService} from "./users.service";
 import {TemplatePuntiResolver} from "./resolvers/TemplatePuntiResolver";
+import { LegendaClassificaComponent } from './components/legenda-classifica/legenda-classifica.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -89,7 +90,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     RestrictedRoleDirective,
     ManageUsersComponent,
     ChangePasswordComponent,
-    AdminPanelComponent
+    AdminPanelComponent,
+    LegendaClassificaComponent
   ],
   imports: [
     BrowserModule,

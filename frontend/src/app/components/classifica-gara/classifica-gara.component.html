@@ -38,6 +38,9 @@
 </div>
 <div class="col-md-12" *ngIf="!modifica && isGaraScontri(gara)">
   <app-classifiche-per-divisione-container [classifiche]="classifichePerGruppi"  [templatePunti]="templatePunti"></app-classifiche-per-divisione-container>
+  <div class="col-md-12" *ngIf="gara.templateGara.id && gara.templateGara.id != 1">
+    <app-legenda-classifica [templatePunti]="templatePunti"></app-legenda-classifica>
+  </div>
 </div>
 <div class="col-md-4">
   <button class="btn btn-primary print-hidden" [disabled]="modifica" (click)="toggleModifica()" *appRestrictedRoles="['ROLE_EDIT','ROLE_ADMIN']">

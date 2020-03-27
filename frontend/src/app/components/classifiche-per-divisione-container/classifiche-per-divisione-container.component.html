@@ -1,5 +1,6 @@
 <div *ngFor="let classifica of classifiche">
   <div *ngIf="templatePunti.length == 1">
+    <h3>{{classifica.divisione.descrizione}}</h3>
   <data-table [data]="classifica.arcieri" [headers]="headersClassifica"
   [selectable]="false" [showRowNumber]="true" [itemsPerPage]="50"
   >

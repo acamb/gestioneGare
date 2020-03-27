@@ -227,7 +227,8 @@ public class GareService {
     }
 
     public List<ClassificaPerDivisione> getClassificheScontriPerGruppi(GaraVO gara) {
-        return CalcoloPunteggiBL.INSTANCE.calcolaClassificaGaraScontriPerGruppi(gara);
+        Gara saved = garaRepository.findById(gara.getId()).get();
+        return CalcoloPunteggiBL.INSTANCE.calcolaClassificaGaraScontriPerGruppi(saved);
     }
 
 

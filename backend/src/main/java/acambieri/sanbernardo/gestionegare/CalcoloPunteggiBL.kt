@@ -102,10 +102,11 @@ object CalcoloPunteggiBL {
     }
 
     fun calcolaClassificaGaraScontriPerGruppi(gara: Gara): List<ClassificaPerDivisione> {
-        val classifiche = ArrayList<ClassificaPerDivisione>();
+        val classifiche = ArrayList<ClassificaPerDivisione>()
         val confGare = gara.partecipazioni.stream().sorted { o1, o2 -> o2.punteggio - o1.punteggio  }.toList()
         for(conf in confGare){
             val arciere = ArciereVO(conf)
+            arciere.divisione = Divisione()
             when {
                 conf.gruppo == "A1" && conf.gara.tipiGara.any { tipo -> tipo.id != 3L && tipo.id !=4L } -> {
                     arciere.divisione.id = -1
