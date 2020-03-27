@@ -1,8 +1,18 @@
-
 <div *ngFor="let classifica of classifiche">
-  <h3>{{classifica.divisione.descrizione}}</h3>
+  <div *ngIf="templatePunti.length == 1">
+    <h3>{{classifica.divisione.descrizione}}</h3>
   <data-table [data]="classifica.arcieri" [headers]="headersClassifica"
-              [selectable]="false" [showRowNumber]="true" [itemsPerPage]="50"
+  [selectable]="false" [showRowNumber]="true" [itemsPerPage]="50"
   >
-  </data-table><br/>
+  </data-table>
+  </div>
+  <div *ngIf="templatePunti.length > 1">
+  <app-table-classifica [gruppo]="classifica.arcieri"
+                        [descrizione]="classifica.divisione.descrizione"
+                        [canModify]="false"
+                        [templatePunti]="templatePunti"
+  ></app-table-classifica>
+  </div>
+  <br/>
+  <div *ngIf="pageBreakOnPrint" class="pageBreak"></div>
 </div>

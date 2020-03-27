@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/gare")
 public class GareController {
@@ -141,5 +140,15 @@ public class GareController {
     @Secured({"ROLE_ADMIN","ROLE_EDIT"})
     public GenericResponseWithPayload backup(){
         return new GenericResponseWithPayload<>(service.doBackup());
+    }
+
+    @PostMapping(value = "/getTemplateGare")
+    public List<TemplateGara> getGareTemplate(){
+        return service.getGareTemplate();
+    }
+
+    @GetMapping(value = "/getTemplatePunti")
+    public List<String> getTemplatePunti(@RequestParam Long id){
+        return service.getTemplatePunti(id);
     }
 }

@@ -16,6 +16,8 @@ export class ClassifichePerDivisioneContainerComponent implements OnInit {
   classifiche: Array<ClassificaPerDivisione>;
   @Input()
   pageBreakOnPrint=false;
+  @Input()
+  templatePunti: Array<string> = [ "" ];
 
   headersClassifica= {nome: "Nome",cognome: "Cognome",punteggio: "Punti"};
 

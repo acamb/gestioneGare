@@ -51,6 +51,8 @@ import { ManageUsersComponent } from './components/manage-users/manage-users.com
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 import {UsersService} from "./users.service";
+import {TemplatePuntiResolver} from "./resolvers/TemplatePuntiResolver";
+import { LegendaClassificaComponent } from './components/legenda-classifica/legenda-classifica.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -88,7 +90,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     RestrictedRoleDirective,
     ManageUsersComponent,
     ChangePasswordComponent,
-    AdminPanelComponent
+    AdminPanelComponent,
+    LegendaClassificaComponent
   ],
   imports: [
     BrowserModule,
@@ -115,7 +118,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptorService,
       multi: true
-    }],
+    },TemplatePuntiResolver],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
@@ -125,6 +128,7 @@ export function extractData(res){
 }
 
 export function getServer(): string{
-  let baseUrl = environment.server + environment.context
+  let getUrl = window.location;
+  let baseUrl = getUrl .protocol + "//" + getUrl.host + environment.context
   return baseUrl;
 }

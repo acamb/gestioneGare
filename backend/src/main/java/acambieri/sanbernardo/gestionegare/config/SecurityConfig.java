@@ -38,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.cors();
         httpSecurity.authorizeRequests().antMatchers("/h2","/h2/**").permitAll().and().headers().frameOptions().sameOrigin();
         httpSecurity.csrf().disable() //no need of csrf protection since we are setting jwt token in angular with an interceptor
                 .authorizeRequests().antMatchers("/","/index.html","/*.bundle.*","/auth").permitAll()

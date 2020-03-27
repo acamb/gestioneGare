@@ -18,10 +18,11 @@ export class ClassificaGaraComponent implements OnInit {
   saving=false;
   classifichePerDivisione: Array<ClassificaPerDivisione>;
   classifichePerGruppi: Array<ClassificaPerDivisione>;
-
+  templatePunti: Array<string>;
 
   constructor(private route: ActivatedRoute,private router : Router,private gareService: GareService) {
     this.gara = this.route.snapshot.data['gara'];
+    this.templatePunti = this.route.snapshot.data['templatePunti'];
     this.getClassifiche();
   }
 

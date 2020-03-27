@@ -1,7 +1,11 @@
 package acambieri.sanbernardo.gestionegare.model;
 
+import java.util.List;
+
 import javax.persistence.*;
-import java.text.ParseException;
+
+import static javax.persistence.CascadeType.*;
+
 
 @Entity
 public class Partecipazione {
@@ -10,11 +14,14 @@ public class Partecipazione {
     private Long id;
     @ManyToOne
     private Gara gara;
-    @OneToOne
+    @ManyToOne
     private Arciere arciere;
     private String gruppo;
+    @Column(name="punteggio_singolo")
     private int punteggio;
-    @OneToOne
+    @OneToMany(mappedBy = "partecipazione",fetch = FetchType.EAGER)
+    private List<Punteggio> punteggi;
+    @ManyToOne
     private Divisione divisione;
     private boolean escludiClassifica;
 
@@ -79,4 +86,15 @@ public class Partecipazione {
         this.punteggio = punteggio;
         return this;
     }
+
+    public List<Punteggio> getPunteggi() {
+        return punteggi;
+    }
+
+    public Partecipazione setPunteggi(List<Punteggio> punteggi) {
+        this.punteggi = punteggi;
+        return this;
+    }
+
+    
 }

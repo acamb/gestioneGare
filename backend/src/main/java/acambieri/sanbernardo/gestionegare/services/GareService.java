@@ -3,6 +3,8 @@ package acambieri.sanbernardo.gestionegare.services;
 import acambieri.sanbernardo.gestionegare.CalcoloPunteggiBL;
 import acambieri.sanbernardo.gestionegare.model.*;
 import acambieri.sanbernardo.gestionegare.repositories.*;
+import org.hibernate.Hibernate;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -12,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
@@ -28,21 +31,38 @@ public class GareService {
     private TipoGaraRepository tipoGaraRepository;
     @Autowired
     private ConfigurazioneRepository configurazioneRepository;
+    @Autowired
+    private TemplateGaraRepository templateGaraRepository;
+    @Autowired
+    private PunteggioRepository punteggioRepository;
 
 
     public GaraVO salvaGara(GaraVO gara){
+        Gara saved = gara.getId() == null ? null : garaRepository.findById(gara.getId()).get();
+        boolean hasPartecipazioni = saved != null && saved.getId() != null && (saved.getPartecipazioni() == null ? false : saved.getPartecipazioni().size() > 0);
+        if(hasPartecipazioni){
+            partecipazioneRepository.deleteAllByGaraId(saved.getId());
+            saved.setPartecipazioni(new ArrayList<>());
+            garaRepository.save(saved);
+        }
+        final Gara savedWithPartecipazioni = garaRepository.save(gara);
         creaPartecipazioni(gara);
-        Gara saved = garaRepository.save(gara);
+        gara.getPartecipazioni()
+                .stream()
+                .forEach(partecipazione -> {
+                    partecipazione.setGara(savedWithPartecipazioni);
+                    Partecipazione savedPartecipazione = partecipazioneRepository.save(partecipazione);
+                    partecipazione.getPunteggi().forEach(punteggio -> {
+                        punteggio.setPartecipazione(savedPartecipazione);
+                        punteggioRepository.save(punteggio);
+                    });
+                });
+        savedWithPartecipazioni.setPartecipazioni(gara.getPartecipazioni());
+        saved=garaRepository.save(savedWithPartecipazioni);
         return new GaraVO(saved,saved.getPartecipazioni());
     }
 
     private void creaPartecipazioni(GaraVO gara){
-        boolean hasPartecipazioni = gara.getId() == null ? false : garaRepository.findById(gara.getId()).get().getPartecipazioni().size() > 0;
-        if(hasPartecipazioni){
-            partecipazioneRepository.deleteAllByGaraId(gara.getId());
-
-        }
-        gara.setPartecipazioni(new ArrayList<>());
         gara.getPartecipazioni().addAll(creaPartecipazioniGruppo(gara,gara.getGruppoA1(),"A1"));
         gara.getPartecipazioni().addAll(creaPartecipazioniGruppo(gara,gara.getGruppoA2(),"A2"));
         gara.getPartecipazioni().addAll(creaPartecipazioniGruppo(gara,gara.getGruppoB1(),"B1"));
@@ -51,21 +71,39 @@ public class GareService {
 
     private List<Partecipazione> creaPartecipazioniGruppo(Gara gara,List<ArciereVO> arcieri,String gruppo){
         List<Partecipazione> partecipazioni = new ArrayList<>();
-        arcieri.forEach(arciere ->
-                partecipazioni.add(new Partecipazione()
-                        .setArciere(arciere)
-                        .setDivisione(arciere.getDivisione())
-                        .setGara(gara)
-                        .setEscludiClassifica(arciere.isEscludiClassifica())
-                        .setGruppo(gruppo)
-                        .setPunteggio(arciere.getPunteggio())
-                )
+        arcieri.forEach(arciere -> {
+                Partecipazione partecipazione = new Partecipazione()
+                .setArciere(arciere)
+                .setDivisione(arciere.getDivisione())
+                .setGara(gara)
+                .setEscludiClassifica(arciere.isEscludiClassifica())
+                .setGruppo(gruppo)
+                .setPunteggio(arciere.getPunteggio());
+                partecipazione.setPunteggi(arciere.getPunteggi()
+                                .stream()
+                                .map(p -> p.setPartecipazione(partecipazione)
+                                           .setTemplatePunteggio(gara.getTemplateGara().getTemplatePunti().get(
+                                                arciere.getPunteggi().indexOf(p)
+                                                                 ))
+                                ).collect(Collectors.toList()));
+                for(int i = partecipazione.getPunteggi().size();i<gara.getTemplateGara().getPunteggi();i++){
+                    partecipazione.getPunteggi().add(new Punteggio()
+                            .setPunteggio(0)
+                            .setPartecipazione(partecipazione)
+                            .setTemplatePunteggio(gara.getTemplateGara().getTemplatePunti().get(i)));
+                }
+                partecipazioni.add(partecipazione);
+            }
         );
         return partecipazioni;
     }
 
     public GaraVO getGara(Gara gara){
         Gara saved = garaRepository.findById(gara.getId()).get();
+        /*//Compatibilita': una gara con 1 solo punteggio ha comunque la struttura dei punteggi con il suo punteggio singolo
+        saved.getPartecipazioni().stream()
+        .filter(p -> p.getPunteggi().size() == 0)
+        .forEach(p -> p.getPunteggi().add(p.getPunteggio()));*/
         return new GaraVO(saved,saved.getPartecipazioni());
     }
 
@@ -95,6 +133,7 @@ public class GareService {
         ).flatMap(arciere -> arciere)
                 .forEach(arciere -> {
                     partecipazioneRepository.updatePunteggio(gara.getId(),arciere.getId(),arciere.getPunteggio());
+                    arciere.getPunteggi().forEach(punteggio -> punteggioRepository.updatePunteggio(punteggio.getId(),punteggio.getPunteggio()));
                 });
         garaRepository.setCompletata(gara.getId());
         Gara saved = garaRepository.findById(gara.getId()).get();
@@ -171,7 +210,7 @@ public class GareService {
             }
             map.get(record.getDivisione()).add(new ArciereVO(record));
         }
-        List<Divisione> keyset = new ArrayList(map.keySet());
+        List<Divisione> keyset = new ArrayList<>(map.keySet());
         keyset.sort(new Comparator<Divisione>() {
             @Override
             public int compare(Divisione o1, Divisione o2) {
@@ -188,7 +227,8 @@ public class GareService {
     }
 
     public List<ClassificaPerDivisione> getClassificheScontriPerGruppi(GaraVO gara) {
-        return CalcoloPunteggiBL.INSTANCE.calcolaClassificaGaraScontriPerGruppi(gara);
+        Gara saved = garaRepository.findById(gara.getId()).get();
+        return CalcoloPunteggiBL.INSTANCE.calcolaClassificaGaraScontriPerGruppi(saved);
     }
 
 
@@ -230,5 +270,20 @@ public class GareService {
             return null;
         }
         return b.toString();
+    }
+
+    public List<TemplateGara> getGareTemplate(){
+        List<TemplateGara> result = new ArrayList<>();
+        templateGaraRepository.findAll().forEach(result::add);
+        return result;
+    }
+
+    public List<String> getTemplatePunti(Long id){
+        Gara gara = garaRepository.findById(id).get();
+        return gara.getTemplateGara().getTemplatePunti()
+            .stream()
+            .sorted((t,t2) -> t.getOrdine()-t2.getOrdine())
+            .map(t -> t.getDescrizione())
+            .collect(Collectors.toList());
     }
 }

@@ -1,7 +1,11 @@
 import {Arciere} from "./Arciere";
 import {TipoGara} from "./TipoGara";
 import {Divisione} from "./Divisione";
-
+export class TemplateGara {
+  id: number;
+  descrizione: string;
+  punteggi: number;
+}
 export class Gara{
   gruppoA1: Array<Arciere>;
   gruppoB1: Array<Arciere>;
@@ -13,6 +17,7 @@ export class Gara{
   punteggioMassimo: number;
   nome: string;
   id: number;
+  templateGara: TemplateGara;
 
   constructor(){
     this.tipiGara=[];

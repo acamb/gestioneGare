@@ -6,6 +6,7 @@ import {Router} from '@angular/router';
 import { User } from './model/User';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import {getServer} from "./app.module";
+import * as jwt_decode from 'jwt-decode'
 
 @Injectable()
 export class AuthenticationService {
@@ -22,11 +23,31 @@ export class AuthenticationService {
 
 
   get authenticated(): boolean {
-    return sessionStorage.getItem('user') != undefined;
+    const loggedIn = sessionStorage.getItem('user') !== undefined;
+    if (!loggedIn) {
+      return false;
+    }
+    const date = new Date(0);
+    try {
+      const exp = jwt_decode(sessionStorage.getItem('token')).exp;
+      date.setUTCSeconds(exp);
+      const valid = new Date().valueOf() < date.valueOf()
+      return valid;
+    }
+    catch(error){
+      return false;
+    }
   }
 
   get token(){
     return this.authenticated ? sessionStorage.getItem('token') : undefined;
+  }
+
+  logout(){
+    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('token');
+    this.subject.next(undefined);
+    this.goToLogin();
   }
 
 
@@ -45,6 +66,8 @@ export class AuthenticationService {
         sessionStorage.setItem('token', 'Bearer ' + resp.token);
         this.subject.next(resp.user);
         return true;
+      },error => {
+        return false;
       })
   }
 
