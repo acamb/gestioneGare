@@ -1,3 +1,6 @@
+<div  class="alert alert-danger" *ngIf="divisioneRequired">
+  Inserire la divisione per ogni arciere
+</div>
 <form #garaForm="ngForm" class="form-horizontal">
   <div class="form-group">
     <div class="col-md-3"><label>Anno societario</label>
@@ -59,6 +62,7 @@
     </div>
   </div>
   <button class="btn btn-primary" (click)="openDuplicaModal()">Copia da gara precedente</button>
+
   <app-creazione-gruppi [divisioni]="garaDaEditare.divisioni" [arcieri]="arcieri"
                         [gara]="garaDaEditare"
                         [numeroCoppie]="numeroCoppie"

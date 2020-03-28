@@ -37,6 +37,7 @@ export class CreazioneGaraComponent implements OnInit {
   numeroCoppie=1;
   templateGara: Observable<Array<TemplateGara>>;
   selectedTemplateGara: TemplateGara;
+  divisioneRequired = false;
 
   @ViewChild('duplicaModal') modal;
 
@@ -122,14 +123,25 @@ export class CreazioneGaraComponent implements OnInit {
 
   async salva() {
     this.saving = true;
-    this.garaDaEditare.templateGara = this.selectedTemplateGara;
-    if (!this.edit) {
-      this.garaDaEditare = await this.gareService.salvaGara(this.garaDaEditare).toPromise();
+    if( [...this.garaDaEditare.gruppoA1,
+      ...this.garaDaEditare.gruppoA2,
+      ...this.garaDaEditare.gruppoB1,
+      ...this.garaDaEditare.gruppoB2].filter(arciere => arciere.divisione == undefined).length > 0){
+      this.divisioneRequired=true;
+      window.scrollTo(0,0);
     }
-    else{
-      this.garaDaEditare = await this.gareService.updateGara(this.garaDaEditare).toPromise();
+    else {
+      this.divisioneRequired = false;
+
+      this.garaDaEditare.templateGara = this.selectedTemplateGara;
+      if (!this.edit) {
+        this.garaDaEditare = await this.gareService.salvaGara(this.garaDaEditare).toPromise();
+      }
+      else {
+        this.garaDaEditare = await this.gareService.updateGara(this.garaDaEditare).toPromise();
+      }
+      this.router.navigateByUrl("/gestioneGare");
     }
-    this.router.navigateByUrl("/gestioneGare");
     this.saving = false;
   }
 
