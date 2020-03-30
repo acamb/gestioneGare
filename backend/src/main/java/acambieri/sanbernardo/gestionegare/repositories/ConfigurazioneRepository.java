@@ -3,6 +3,7 @@ package acambieri.sanbernardo.gestionegare.repositories;
 import acambieri.sanbernardo.gestionegare.model.Configurazione;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.lang.annotation.Native;
@@ -14,6 +15,6 @@ public interface ConfigurazioneRepository extends CrudRepository<Configurazione,
     @Query("select c from Configurazione c")
     Configurazione getConfigurazione();
 
-    @Query(value="SCRIPT TO 'backup.sql'",nativeQuery = true)
-    List<String> doBackup();
+    @Query(value="SCRIPT TO :file",nativeQuery = true)
+    List<String> doBackup(@Param("file") String backupFile);
 }

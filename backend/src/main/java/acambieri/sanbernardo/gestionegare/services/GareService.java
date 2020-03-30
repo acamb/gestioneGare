@@ -6,6 +6,7 @@ import acambieri.sanbernardo.gestionegare.repositories.*;
 import org.hibernate.Hibernate;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
@@ -35,6 +36,8 @@ public class GareService {
     private TemplateGaraRepository templateGaraRepository;
     @Autowired
     private PunteggioRepository punteggioRepository;
+    @Value("${backup.tmp.dir}")
+    private String backupTmpDir;
 
 
     public GaraVO salvaGara(GaraVO gara){
@@ -261,8 +264,12 @@ public class GareService {
     }
 
     public String doBackup(){
-        configurazioneRepository.doBackup();
-        File f = new File("backup.sql");
+        File dir = new File(backupTmpDir);
+        if(!dir.exists()){
+            dir.mkdirs();
+        }
+        File f = new File(backupTmpDir + "backup.sql");
+        configurazioneRepository.doBackup(f.getAbsolutePath());
         StringBuilder b = new StringBuilder();
         try (Stream<String> lines = Files.lines(f.toPath())){
             lines.forEach(line -> b.append(line+"\n"));
