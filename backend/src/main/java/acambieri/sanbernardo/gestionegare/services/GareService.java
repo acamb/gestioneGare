@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -167,7 +168,8 @@ public class GareService {
     }
 
     public List<ClassificaPerDivisione> getClassifichePerGara(GaraVO gara){
-        List<Partecipazione> list = partecipazioneRepository.getByGaraId(gara.getId());
+        Sort sort = Sort.by(Sort.Direction.DESC ,"punteggio");
+        List<Partecipazione> list = partecipazioneRepository.getByGaraId(gara.getId(),sort);
         List<ClassificaPerDivisione> result = parseConfGara(list);
         return result;
     }

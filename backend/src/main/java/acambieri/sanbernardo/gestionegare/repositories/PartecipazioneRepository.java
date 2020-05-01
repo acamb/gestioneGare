@@ -1,6 +1,8 @@
 package acambieri.sanbernardo.gestionegare.repositories;
 
 import acambieri.sanbernardo.gestionegare.model.Partecipazione;
+
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -17,6 +19,8 @@ public interface PartecipazioneRepository extends CrudRepository<Partecipazione,
     void updatePunteggio(@Param("gara") Long garaId,@Param("arciere") Long arciereId,@Param("punteggio") int punteggio);
 
     List<Partecipazione> getByGaraId(long idGara);
+
+    List<Partecipazione> getByGaraId(long idGara,Sort sort);
 
     void deleteAllByGaraId(long idGara);
 }

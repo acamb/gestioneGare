@@ -5,8 +5,9 @@ import {Observable} from 'rxjs/Observable';
 import {Router} from '@angular/router';
 import { User } from './model/User';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import {getServer} from "./app.module";
+import { getServer } from './Utils';
 import * as jwt_decode from 'jwt-decode'
+
 
 @Injectable()
 export class AuthenticationService {

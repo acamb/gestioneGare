@@ -9,7 +9,7 @@ import {Divisione} from "./model/Divisione";
 import {ClassificaPerDivisione} from "./model/ClassifichePerDivisione";
 import {GruppiContainer} from "./model/GruppiContainer";
 import "rxjs/add/operator/switchMap";
-import {getServer} from "./app.module";
+import { getServer } from './Utils';
 
 
 @Injectable()
