@@ -53,7 +53,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version:'2.2.4.RELEASE'
     compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jre8', version:'1.1.60'
     compile group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version:'1.1.60'
-    compile group: 'com.h2database', name: 'h2', version:'1.4.196'
+    compile group: 'com.h2database', name: 'h2', version:'1.4.200'
     compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.20'
     compile group: 'org.springframework', name: 'spring-context-support', version:'5.2.3.RELEASE'
     compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
