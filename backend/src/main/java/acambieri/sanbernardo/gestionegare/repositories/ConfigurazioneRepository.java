@@ -14,6 +14,6 @@ public interface ConfigurazioneRepository extends CrudRepository<Configurazione,
     @Query("select c from Configurazione c")
     Configurazione getConfigurazione();
 
-    @Query(value="SCRIPT TO 'backup.sql'",nativeQuery = true)
-    List<String> doBackup();
+    @Query(value="SCRIPT TO :file",nativeQuery = true)
+    List<String> doBackup(String file);
 }
