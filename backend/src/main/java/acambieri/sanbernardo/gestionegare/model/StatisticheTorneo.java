@@ -1,17 +1,18 @@
 package acambieri.sanbernardo.gestionegare.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StatisticheTorneo {
-    private List<Double> punteggi;
-    private Double sommaNormalizzata = 0.0;
+    private List<BigDecimal> punteggi;
+    private BigDecimal sommaNormalizzata = BigDecimal.ZERO;
 
-    public Double getSommaNormalizzata() {
+    public BigDecimal getSommaNormalizzata() {
         return sommaNormalizzata;
     }
 
-    public void setSommaNormalizzata(Double sommaNormalizzata) {
+    public void setSommaNormalizzata(BigDecimal sommaNormalizzata) {
         this.sommaNormalizzata = sommaNormalizzata;
     }
 
@@ -19,11 +20,11 @@ public class StatisticheTorneo {
         punteggi = new ArrayList<>();
     }
 
-    public List<Double> getPunteggi() {
+    public List<BigDecimal> getPunteggi() {
         return punteggi;
     }
 
-    public void setPunteggi(List<Double> punteggi) {
+    public void setPunteggi(List<BigDecimal> punteggi) {
         this.punteggi = punteggi;
     }
 }

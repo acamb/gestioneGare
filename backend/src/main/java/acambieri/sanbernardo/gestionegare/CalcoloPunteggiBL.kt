@@ -1,6 +1,7 @@
 package acambieri.sanbernardo.gestionegare
 
 import acambieri.sanbernardo.gestionegare.model.*
+import java.math.BigDecimal
 
 import java.util.ArrayList
 import java.util.HashMap
@@ -11,15 +12,15 @@ object CalcoloPunteggiBL {
 
     //TODO[AC] provare che dopo la modifica la classifica sia coerente e che  a parita' di posizioni(ascending) guardi la sommaPuntiNormalizzata (descending)
 
-    val sommaPuntiNormalizzatiExpr = { punteggi :HashMap<ArciereVO, StatisticheTorneo>, gara : Gara, partecipazione: Partecipazione, index: Int -> (partecipazione.punteggio.toDouble() * 600.0 / gara.punteggioMassimo.toDouble()).toDouble()}
+    val sommaPuntiNormalizzatiExpr = { punteggi :HashMap<ArciereVO, StatisticheTorneo>, gara : Gara, partecipazione: Partecipazione, index: Int -> (BigDecimal(partecipazione.punteggio).multiply(BigDecimal(600)).divide(BigDecimal(gara.punteggioMassimo)))}
     val sommaPosizioniExpr = { punteggi :HashMap<ArciereVO, StatisticheTorneo>, gara : Gara, partecipazione: Partecipazione, index: Int->
-        punteggi[partecipazione.arciere]!!.punteggi.add(index.toDouble())
+        punteggi[partecipazione.arciere]!!.punteggi.add(BigDecimal(index))
     }
 
     fun calcolaClassificaTorneoSuPunti(gareTorneo: List<Gara>, gruppi: Boolean): List<ClassificaPerDivisione> {
         return calcolaClassifica(gareTorneo,
                 gruppi,
-                {punti -> Math.round(punti!!.sortedDescending().stream()!!.limit(3).reduce(BinaryOperator<Double> { a, b -> java.lang.Double.sum(a, b) }).get()).toInt()},
+                {punti -> Math.round(punti!!.sortedDescending().stream()!!.limit(3).reduce(BinaryOperator<BigDecimal> { a, b -> a.add(b) }).get().toDouble()).toInt()},
                 // punti : puntiMassimiGara = x : 600
                 { punteggi,g,c,index: Int ->  punteggi[c.arciere]!!.punteggi.add(sommaPuntiNormalizzatiExpr(punteggi,g,c,index)) }
             )
@@ -28,17 +29,17 @@ object CalcoloPunteggiBL {
     fun calcolaClassificaSuPosizioni(gareTorneo: List<Gara>, gruppi: Boolean): List<ClassificaPerDivisione> {
         return calcolaClassifica(gareTorneo,
                 gruppi,
-                {punti: MutableList<Double> ->
+                {punti: MutableList<BigDecimal> ->
                     while(punti.size < 4){
-                        punti.add(100.0);
+                        punti.add(BigDecimal(100));
                     }
-                    Math.round(punti!!.sorted().stream()!!.limit(3).reduce(BinaryOperator<Double> { a, b -> java.lang.Double.sum(a, b) }).get()).toInt()
+                    Math.round(punti!!.sorted().stream()!!.limit(3).reduce(BinaryOperator<BigDecimal> { a, b -> a.add(b) }).get().toDouble()).toInt()
                 },
                 //la posizione e' direttamente l'index
                  fun(punteggi,g,c,index) {
 
                     sommaPosizioniExpr(punteggi,g,c,index);
-                    punteggi[c.arciere]!!.sommaNormalizzata+= sommaPuntiNormalizzatiExpr(punteggi,g,c,index)
+                    punteggi[c.arciere]!!.sommaNormalizzata = punteggi[c.arciere]!!.sommaNormalizzata.add(sommaPuntiNormalizzatiExpr(punteggi,g,c,index))
                     }
 
                 ,
@@ -47,7 +48,7 @@ object CalcoloPunteggiBL {
     }
 
     fun calcolaClassifica(gareTorneo: List<Gara>, gruppi: Boolean,
-                          sommaPuntiExpr: (punteggiList: MutableList<Double>) -> Int,
+                          sommaPuntiExpr: (punteggiList: MutableList<BigDecimal>) -> Int,
                           calcoloSingoloPunteggioExpr:  (punteggi: HashMap<ArciereVO,StatisticheTorneo>, gara:Gara, partecipazione: Partecipazione, posizione: Int) -> Any,
                           sortingClassificaComparator: Comparator<in ArciereVO> = compareByDescending {  it.punteggio }): List<ClassificaPerDivisione>{
         val punteggi = HashMap<ArciereVO, StatisticheTorneo>()

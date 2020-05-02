@@ -1,5 +1,6 @@
 package acambieri.sanbernardo.gestionegare.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class ArciereVO extends Arciere{
     @Transient
     private List<Punteggio> punteggi=new ArrayList<>();
     @Transient
-    private Double sommaPuntiNormalizzata;
+    private BigDecimal sommaPuntiNormalizzata;
     @Transient
     private boolean escludiClassifica;
 
@@ -43,11 +44,11 @@ public class ArciereVO extends Arciere{
         this.punteggi = conf.getPunteggi();
     }
 
-    public Double getSommaPuntiNormalizzata() {
+    public BigDecimal getSommaPuntiNormalizzata() {
         return sommaPuntiNormalizzata;
     }
 
-    public void setSommaPuntiNormalizzata(Double sommaPuntiNormalizzata) {
+    public void setSommaPuntiNormalizzata(BigDecimal sommaPuntiNormalizzata) {
         this.sommaPuntiNormalizzata = sommaPuntiNormalizzata;
     }
 
