@@ -65,8 +65,8 @@ object CalcoloPunteggiBL {
                         /*arciereVO.divisione.id = (if ("A" == c.gruppo) -1 else -2).toLong()
                         arciereVO.divisione.descrizione = if ("A" == c.gruppo) "Gruppo A" else "Gruppo B"*/
                         when{
-                            "A" == c.gruppo || "A1" == c.gruppo -> { arciereVO.divisione.id = -1 ; arciereVO.divisione.descrizione = "Gruppo A"}
-                            !c.isEscludiClassifica && (c.gruppo== "B" || c.gruppo== "B1") -> { arciereVO.divisione.id = -2 ; arciereVO.divisione.descrizione = "Gruppo B"}
+                            "A" == c.gruppo || "A1" == c.gruppo  || "A2" == c.gruppo-> { arciereVO.divisione.id = -1 ; arciereVO.divisione.descrizione = "Gruppo A"}
+                            !c.isEscludiClassifica && (c.gruppo== "B" || c.gruppo== "B1" || c.gruppo== "B2") -> { arciereVO.divisione.id = -2 ; arciereVO.divisione.descrizione = "Gruppo B"}
                             c.isEscludiClassifica -> { arciereVO.divisione.id = -3 ; arciereVO.divisione.descrizione = "Gruppo G"}
 
                         }
