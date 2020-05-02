@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -38,6 +39,9 @@ public class GareService {
     private PunteggioRepository punteggioRepository;
     @Value("${backup.tmp.dir}")
     private String backupTmpDir;
+
+    @Value("${backup.tmp.dir}")
+    String backupDir;
 
 
     public GaraVO salvaGara(GaraVO gara){
@@ -170,7 +174,8 @@ public class GareService {
     }
 
     public List<ClassificaPerDivisione> getClassifichePerGara(GaraVO gara){
-        List<Partecipazione> list = partecipazioneRepository.getByGaraId(gara.getId());
+        Sort sort = Sort.by(Sort.Direction.DESC ,"punteggio");
+        List<Partecipazione> list = partecipazioneRepository.getByGaraId(gara.getId(),sort);
         List<ClassificaPerDivisione> result = parseConfGara(list);
         return result;
     }
@@ -264,12 +269,8 @@ public class GareService {
     }
 
     public String doBackup(){
-        File dir = new File(backupTmpDir);
-        if(!dir.exists()){
-            dir.mkdirs();
-        }
-        File f = new File(backupTmpDir + "backup.sql");
-        configurazioneRepository.doBackup(f.getAbsolutePath());
+        configurazioneRepository.doBackup(backupDir+"backup.sql");
+        File f = new File(backupDir+"backup.sql");
         StringBuilder b = new StringBuilder();
         try (Stream<String> lines = Files.lines(f.toPath())){
             lines.forEach(line -> b.append(line+"\n"));

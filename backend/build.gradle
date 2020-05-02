@@ -1,27 +1,27 @@
 
-
 buildscript {
-    ext.environment="test"
-    ext.kotlin_version = '1.1.60'
     repositories {
         mavenCentral()
     }
+
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.0.0.RELEASE")
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.72"
     }
 }
 
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.3.72"
+    id 'org.springframework.boot' version '2.2.6.RELEASE'
+}
 apply plugin: 'java'
 apply plugin: 'maven'
-apply plugin: "kotlin"
-apply plugin: "spring-boot"
-mainClassName = 'acambieri.sanbernardo.gestionegare.GestionegareApplication'
-loadConfiguration()
-def environment=ext.environment
+springBoot {
+    mainClassName = 'acambieri.sanbernardo.gestionegare.GestionegareApplication'
+}
+
 
 group = 'acambieri.sanbernardo'
-version = '1.2'
+version = '1.3'
 
 description = """gestionegare"""
 
@@ -29,64 +29,13 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 
-
-def loadConfiguration() {
-    ext.environment = hasProperty('env') ? env : 'test'
-    println "Env: $environment"
-}
-
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
-task renameResources(type: Copy) {
-    from "build/resources/main"
-    into "build/resources/main"
-    include "**/*_$environment*"
-    rename {
-        String name ->
-            name.replace("_$environment","")
-    }
-    doLast{
-        println("renamed _$environment files.")
-    }
-}
-
-
-
-
-task dist(){
-
-}
-
 task compileFrontend(type: Exec) {
     workingDir '../frontend'
-    commandLine 'cmd','/c','npm','run',"package_$environment"
-}
-//TODO[AC] renameResources viene eseguito troppo tardi
-/*build.dependsOn renameResources
-processResources.dependsOn compileFrontend
-renameResources.mustRunAfter processResources*/
-jar.dependsOn renameResources
-renameResources.dependsOn processResources
-
-dist.dependsOn compileJava,compileKotlin,processResources,renameResources,build
-
-gradle.taskGraph.whenReady {
-    def versionPropsFile = file('version.properties')
-    if (versionPropsFile.canRead()) {
-        def Properties versionProps = new Properties()
-        versionProps.load(new FileInputStream(versionPropsFile))
-        def versionMin=Integer.parseInt(versionProps['version']);
-        if(environment.equals("prod")){
-            versionMin++;
-            versionProps['version']=String.valueOf(versionMin);
-            versionProps.store(new FileWriter(versionPropsFile),"")
-        }
-        version+="."+versionMin
-    }
-    println "Current version: $version"
-
+    commandLine 'cmd','/c','npm','run',"package"
 }
 
 
