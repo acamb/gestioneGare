@@ -35,7 +35,7 @@ tasks.withType(JavaCompile) {
 
 task compileFrontend(type: Exec) {
     workingDir '../frontend'
-    commandLine 'cmd','/c','npm','run',"package"
+    commandLine 'npm','run',"package"
 }
 
 
