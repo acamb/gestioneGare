@@ -5,5 +5,6 @@
 
 export const environment = {
   production: false,
-  context: "/"
+  context: "/",
+  testServer: 'http://localhost:8082'
 };

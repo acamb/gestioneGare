@@ -5,18 +5,17 @@ buildscript {
     }
 
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.72"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10"
     }
 }
 
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.3.72"
-    id 'org.springframework.boot' version '2.2.6.RELEASE'
+    id "org.jetbrains.kotlin.jvm" version "1.7.10"
+    id 'org.springframework.boot' version '2.7.2'
 }
 apply plugin: 'java'
-apply plugin: 'maven'
 springBoot {
-    mainClassName = 'acambieri.sanbernardo.gestionegare.GestionegareApplication'
+    mainClass = 'acambieri.sanbernardo.gestionegare.GestionegareApplication'
 }
 
 
@@ -25,15 +24,15 @@ version = '1.3'
 
 description = """gestionegare"""
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 17
+targetCompatibility = 17
 
 
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
-task compileFrontend(type: Exec) {
+task implementationFrontend(type: Exec) {
     workingDir '../frontend'
     commandLine 'npm','run',"package"
 }
@@ -47,21 +46,22 @@ repositories {
     maven { url "https://repo1.maven.org/maven2/" }
 }
 dependencies {
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:'2.2.4.RELEASE'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version:'2.2.4.RELEASE'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version:'2.2.4.RELEASE'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version:'2.2.4.RELEASE'
-    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jre8', version:'1.1.60'
-    compile group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version:'1.1.60'
-    compile group: 'com.h2database', name: 'h2', version:'1.4.200'
-    compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.20'
-    compile group: 'org.springframework', name: 'spring-context-support', version:'5.2.3.RELEASE'
-    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
-    //for java 11
-    compile group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.2'
-    runtime group: 'org.springframework.boot', name: 'spring-boot-devtools', version:'2.2.4.RELEASE'
-    testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version:'2.2.4.RELEASE') {
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.7.2'
+    implementation 'org.springframework.boot:spring-boot-starter-security:2.7.2'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.7.2'
+    implementation 'org.springframework.boot:spring-boot-starter-aop:2.7.2'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.10'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.7.10'
+    implementation 'com.h2database:h2:1.4.200'
+    implementation 'org.slf4j:slf4j-api:1.7.36'
+    implementation 'org.springframework:spring-context-support:5.3.22'
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    // JAX-B dependencies for JDK 9+
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.2'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.2'
+    runtimeOnly 'org.springframework.boot:spring-boot-devtools:2.7.2'
+    testCompileOnly('org.springframework.boot:spring-boot-starter-test:2.7.2') {
         exclude(module: 'commons-logging')
     }
-    testCompile(group: 'org.springframework.security', name: 'spring-security-test', version:'5.2.1.RELEASE')
+    testCompileOnly('org.springframework.security:spring-security-test:5.7.2')
 }
