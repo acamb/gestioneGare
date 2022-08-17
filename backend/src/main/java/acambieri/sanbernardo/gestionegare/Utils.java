@@ -15,4 +15,8 @@ public class Utils {
         e.printStackTrace(pw);
         return sw.toString();
     }
+
+    private Utils(){
+        throw new IllegalStateException("Don't instantiate this class");
+    }
 }

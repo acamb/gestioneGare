@@ -5,20 +5,14 @@ import acambieri.sanbernardo.gestionegare.aspects.RestorePassword;
 import acambieri.sanbernardo.gestionegare.controllers.requests.ChangePasswordRequest;
 import acambieri.sanbernardo.gestionegare.exceptions.WrongPasswordException;
 import acambieri.sanbernardo.gestionegare.model.User;
-import acambieri.sanbernardo.gestionegare.repositories.UserRepository;
 import acambieri.sanbernardo.gestionegare.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.List;
 

@@ -14,4 +14,7 @@ public class JwtUtils {
                 .signWith(SignatureAlgorithm.HS512,jwtSecret)
                 .compact();
     }
+    private JwtUtils(){
+        throw new IllegalStateException("Don't instantiate this class");
+    }
 }

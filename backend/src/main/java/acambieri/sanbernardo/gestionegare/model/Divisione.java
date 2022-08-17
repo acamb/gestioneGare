@@ -1,7 +1,6 @@
 package acambieri.sanbernardo.gestionegare.model;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name="DIVISIONI")
@@ -12,9 +11,6 @@ public class Divisione {
     private String descrizione;
     private boolean defaultGroup;
     private boolean enabled;
-/*    @ManyToMany
-    @JoinColumn(name = "ID_DIVISIONE",table = "DIVISIONI_GARA")
-    private List<Gara> gare;*/
 
     public boolean isDefaultGroup() {
         return defaultGroup;

@@ -45,8 +45,8 @@ public class GareService {
 
 
     public GaraVO salvaGara(GaraVO gara){
-        Gara saved = gara.getId() == null ? null : garaRepository.findById(gara.getId()).get();
-        boolean hasPartecipazioni = saved != null && saved.getId() != null && (saved.getPartecipazioni() == null ? false : saved.getPartecipazioni().size() > 0);
+        Gara saved = gara.getId() == null ? null : garaRepository.findById(gara.getId()).orElse(null);
+        boolean hasPartecipazioni = saved != null && saved.getId() != null && (saved.getPartecipazioni() != null && !saved.getPartecipazioni().isEmpty());
         if(hasPartecipazioni){
             partecipazioneRepository.deleteAllByGaraId(saved.getId());
             saved.setPartecipazioni(new ArrayList<>());
@@ -92,7 +92,7 @@ public class GareService {
                                            .setTemplatePunteggio(gara.getTemplateGara().getTemplatePunti().get(
                                                 arciere.getPunteggi().indexOf(p)
                                                                  ))
-                                ).collect(Collectors.toList()));
+                                ).toList());
                 for(int i = partecipazione.getPunteggi().size();i<gara.getTemplateGara().getPunteggi();i++){
                     partecipazione.getPunteggi().add(new Punteggio()
                             .setPunteggio(0)
@@ -106,11 +106,7 @@ public class GareService {
     }
 
     public GaraVO getGara(Gara gara){
-        Gara saved = garaRepository.findById(gara.getId()).get();
-        /*//Compatibilita': una gara con 1 solo punteggio ha comunque la struttura dei punteggi con il suo punteggio singolo
-        saved.getPartecipazioni().stream()
-        .filter(p -> p.getPunteggi().size() == 0)
-        .forEach(p -> p.getPunteggi().add(p.getPunteggio()));*/
+        Gara saved = garaRepository.findById(gara.getId()).orElseThrow();
         return new GaraVO(saved,saved.getPartecipazioni());
     }
 
@@ -143,7 +139,7 @@ public class GareService {
                     arciere.getPunteggi().forEach(punteggio -> punteggioRepository.updatePunteggio(punteggio.getId(),punteggio.getPunteggio()));
                 });
         garaRepository.setCompletata(gara.getId());
-        Gara saved = garaRepository.findById(gara.getId()).get();
+        Gara saved = garaRepository.findById(gara.getId()).orElseThrow();
         return new GaraVO(saved,saved.getPartecipazioni());
     }
 
@@ -176,8 +172,7 @@ public class GareService {
     public List<ClassificaPerDivisione> getClassifichePerGara(GaraVO gara){
         Sort sort = Sort.by(Sort.Direction.DESC ,"punteggio");
         List<Partecipazione> list = partecipazioneRepository.getByGaraId(gara.getId(),sort);
-        List<ClassificaPerDivisione> result = parseConfGara(list);
-        return result;
+        return parseConfGara(list);
     }
 
     public List<ClassificaPerDivisione> getClassificaIndoorPerDivisioni(int anno) {
@@ -212,19 +207,14 @@ public class GareService {
     private List<ClassificaPerDivisione> parseConfGara(List<Partecipazione> list){
         Map<Divisione,List<ArciereVO>> map = new HashMap<>();
         List<ClassificaPerDivisione> result = new ArrayList<>();
-        for(Partecipazione record : list){
-            if(!map.containsKey(record.getDivisione())){
-                map.put(record.getDivisione(),new ArrayList<ArciereVO>());
+        for(Partecipazione partecipazione : list){
+            if(!map.containsKey(partecipazione.getDivisione())){
+                map.put(partecipazione.getDivisione(),new ArrayList<>());
             }
-            map.get(record.getDivisione()).add(new ArciereVO(record));
+            map.get(partecipazione.getDivisione()).add(new ArciereVO(partecipazione));
         }
         List<Divisione> keyset = new ArrayList<>(map.keySet());
-        keyset.sort(new Comparator<Divisione>() {
-            @Override
-            public int compare(Divisione o1, Divisione o2) {
-                return o1.getDescrizione().compareTo(o2.getDescrizione());
-            }
-        });
+        keyset.sort((o1, o2) -> o1.getDescrizione().compareTo(o2.getDescrizione()));
         for(Divisione d : keyset){
             ClassificaPerDivisione classifica = new ClassificaPerDivisione();
             classifica.setDivisione(d);
@@ -235,7 +225,7 @@ public class GareService {
     }
 
     public List<ClassificaPerDivisione> getClassificheScontriPerGruppi(GaraVO gara) {
-        Gara saved = garaRepository.findById(gara.getId()).get();
+        Gara saved = garaRepository.findById(gara.getId()).orElseThrow();
         return CalcoloPunteggiBL.INSTANCE.calcolaClassificaGaraScontriPerGruppi(saved);
     }
 
@@ -243,11 +233,11 @@ public class GareService {
 
     public int getAnnoSocietario(){
         String date = configurazioneRepository.getConfigurazione().getDataAnnoSocietario();
-        Calendar c = GregorianCalendar.getInstance();
+        Calendar c = Calendar.getInstance();
         //parte da 0
         c.set(Calendar.MONTH,Integer.parseInt(date.split("/")[1])-1);
         c.set(Calendar.DAY_OF_MONTH,Integer.parseInt(date.split("/")[0]));
-        Calendar capodanno = GregorianCalendar.getInstance();
+        Calendar capodanno = Calendar.getInstance();
         //parte da 0
         capodanno.set(Calendar.MONTH,11);
         capodanno.set(Calendar.DAY_OF_MONTH,31);
@@ -265,7 +255,7 @@ public class GareService {
     }
 
     public TipoGara getTipoGara(Long id) {
-        return tipoGaraRepository.findById(id).get();
+        return tipoGaraRepository.findById(id).orElseThrow();
     }
 
     public String doBackup(){
@@ -287,11 +277,11 @@ public class GareService {
     }
 
     public List<String> getTemplatePunti(Long id){
-        Gara gara = garaRepository.findById(id).get();
+        Gara gara = garaRepository.findById(id).orElseThrow();
         return gara.getTemplateGara().getTemplatePunti()
             .stream()
             .sorted((t,t2) -> t.getOrdine()-t2.getOrdine())
-            .map(t -> t.getDescrizione())
-            .collect(Collectors.toList());
+            .map(TemplatePunteggio::getDescrizione)
+            .toList();
     }
 }

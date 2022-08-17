@@ -5,8 +5,6 @@ import acambieri.sanbernardo.gestionegare.exceptions.WrongPasswordException;
 import acambieri.sanbernardo.gestionegare.model.User;
 import acambieri.sanbernardo.gestionegare.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -25,10 +23,8 @@ public class UserService {
 
     @Transactional
     public User saveUser(User user){
-        if(user.getId() == null){
-            if(userRepository.findByUsername(user.getUsername()) != null){
-                throw new UserAlreadyExistsException();
-            }
+        if (user.getId() == null && userRepository.findByUsername(user.getUsername()) != null) {
+            throw new UserAlreadyExistsException();
         }
         return userRepository.save(user);
     }

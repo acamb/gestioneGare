@@ -2,8 +2,6 @@ package acambieri.sanbernardo.gestionegare;
 
 
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -27,7 +25,7 @@ public class GlobalExceptionHandler {
         if(e instanceof BadCredentialsException){
             response = ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }else {
-            response = new ResponseEntity<Object>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+            response = new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;
     }

@@ -18,7 +18,7 @@ public class GareController {
 
     @Transactional
     @Secured({"ROLE_ADMIN","ROLE_EDIT"})
-    @RequestMapping(value="/salva",method= RequestMethod.POST)
+    @PostMapping(value="/salva")
     public GaraVO salvaGara(@RequestBody GaraVO gara){
         service.salvaGara(gara);
         return service.getGara(gara);
@@ -26,7 +26,7 @@ public class GareController {
 
     @Transactional
     @Secured({"ROLE_ADMIN","ROLE_EDIT"})
-    @RequestMapping(value="/update",method= RequestMethod.POST)
+    @PostMapping(value="/update")
     public GaraVO updateGara(@RequestBody GaraVO gara){
         service.salvaGara(gara);
         return service.getGara(gara);
@@ -52,14 +52,14 @@ public class GareController {
 
     @Transactional
     @Secured({"ROLE_ADMIN","ROLE_EDIT"})
-    @RequestMapping(value = "/associaListe",method=RequestMethod.PUT)
+    @PutMapping(value = "/associaListe")
     public GaraVO associaListe(@RequestBody GaraVO gara){
         return service.salvaGara(gara);
     }
 
     @Transactional
     @Secured({"ROLE_ADMIN","ROLE_EDIT"})
-    @RequestMapping(value = "/salvaClassifica",method=RequestMethod.PUT)
+    @PutMapping(value = "/salvaClassifica")
     public GaraVO salvaClassifica(@RequestBody GaraVO gara){
         return service.salvaClassifica(gara);
     }
@@ -82,12 +82,12 @@ public class GareController {
     @RequestMapping(value = "/getDivisioni")
     public List<Divisione> getDivisioni(){return service.getDivisioni();}
 
-    @RequestMapping(value = "/getClassifiche",method=RequestMethod.POST)
+    @PostMapping(value = "/getClassifiche")
     public List<ClassificaPerDivisione> getClassifiche(@RequestBody GaraVO gara){
         return service.getClassifichePerGara(gara);
     }
 
-    @RequestMapping(value = "/getClassificheScontri",method=RequestMethod.POST)
+    @PostMapping(value = "/getClassificheScontri")
     public List<ClassificaPerDivisione> getClassificheGara(@RequestBody GaraVO gara){
         return service.getClassificheScontriPerGruppi(gara);
     }
@@ -138,7 +138,7 @@ public class GareController {
 
     @PostMapping(value = "/backup")
     @Secured({"ROLE_ADMIN","ROLE_EDIT"})
-    public GenericResponseWithPayload backup(){
+    public GenericResponseWithPayload<String> backup(){
         return new GenericResponseWithPayload<>(service.doBackup());
     }
 
