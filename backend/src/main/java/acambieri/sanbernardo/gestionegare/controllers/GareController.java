@@ -20,7 +20,6 @@ public class GareController {
 
     final GaraVOMapper mapper = new GaraVOMapper();
 
-    @Transactional
     @Secured({"ROLE_ADMIN","ROLE_EDIT"})
     @PostMapping(value="/salva")
     public GaraVO salvaGara(@RequestBody GaraVO gara){
@@ -28,7 +27,6 @@ public class GareController {
         return service.getGara(mapper.toEntity(gara));
     }
 
-    @Transactional
     @Secured({"ROLE_ADMIN","ROLE_EDIT"})
     @PostMapping(value="/update")
     public GaraVO updateGara(@RequestBody GaraVO gara){
@@ -54,14 +52,12 @@ public class GareController {
         return service.getGara(gara);
     }
 
-    @Transactional
     @Secured({"ROLE_ADMIN","ROLE_EDIT"})
     @PutMapping(value = "/associaListe")
     public GaraVO associaListe(@RequestBody GaraVO gara){
         return service.salvaGara(gara);
     }
 
-    @Transactional
     @Secured({"ROLE_ADMIN","ROLE_EDIT"})
     @PutMapping(value = "/salvaClassifica")
     public GaraVO salvaClassifica(@RequestBody GaraVO gara){
