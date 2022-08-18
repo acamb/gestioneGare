@@ -1,5 +1,7 @@
 package acambieri.sanbernardo.gestionegare.model;
 
+import org.hibernate.annotations.Cascade;
+
 import java.util.List;
 
 import javax.persistence.*;
@@ -18,6 +20,7 @@ public class Partecipazione {
     @Column(name="punteggio_singolo")
     private int punteggio;
     @OneToMany(mappedBy = "partecipazione",fetch = FetchType.EAGER)
+    @Cascade(org.hibernate.annotations.CascadeType.DELETE)
     private List<Punteggio> punteggi;
     @ManyToOne
     private Divisione divisione;
