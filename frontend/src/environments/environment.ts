@@ -5,6 +5,6 @@
 
 export const environment = {
   production: false,
-  context: "/",
+  context: "/api/",
   testServer: 'http://localhost:8082'
 };
