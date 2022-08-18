@@ -28,8 +28,6 @@ public class GareService {
     @Autowired
     private PartecipazioneRepository partecipazioneRepository;
     @Autowired
-    private DivisioneRepository divisioneRepository;
-    @Autowired
     private GaraRepository garaRepository;
     @Autowired
     private TipoGaraRepository tipoGaraRepository;
@@ -172,19 +170,7 @@ public class GareService {
         return result;
     }
 
-    public List<Divisione> getDivisioni(){
-        List<Divisione> result = new ArrayList<>();
-        divisioneRepository.findAll().forEach(result::add);
-        return result;
-    }
 
-    public Divisione saveDivisione(Divisione divisione){
-        return divisioneRepository.save(divisione);
-    }
-
-    public void deleteDivisione(Divisione divisione){
-        divisioneRepository.delete(divisione);
-    }
 
     public List<ClassificaPerDivisione> getClassifichePerGara(GaraVO gara){
         Sort sort = Sort.by(Sort.Direction.DESC ,"punteggio");

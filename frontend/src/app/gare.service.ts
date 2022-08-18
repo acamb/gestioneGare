@@ -10,6 +10,7 @@ import {ClassificaPerDivisione} from "./model/ClassifichePerDivisione";
 import {GruppiContainer} from "./model/GruppiContainer";
 import "rxjs/add/operator/switchMap";
 import { getServer } from './Utils';
+import { RequestOptions } from '@angular/http';
 
 
 @Injectable()
@@ -77,7 +78,7 @@ export class GareService {
   }
 
   getDivisioni(): Observable<Array<Divisione>> {
-    return this.http.get(getServer() + "gare/getDivisioni")
+    return this.http.get(getServer() + "divisione/")
 
   }
 
@@ -138,17 +139,17 @@ export class GareService {
   }
 
   insertDivisione(divisione: Divisione) : Observable<Divisione>{
-    return this.http.post(getServer() + "gare/divisioni/add",divisione)
+    return this.http.post<Divisione>(getServer() + "divisione/",divisione)
 
   }
 
   updateDivisione(divisione: Divisione){
-    return this.http.post(getServer() + "gare/divisioni/update",divisione)
+    return this.http.put(getServer() + "divisione/",divisione)
 
   }
 
   deleteDivisione(divisione: Divisione){
-    return this.http.post(getServer() + "gare/divisioni/delete",divisione)
+    return this.http.delete(getServer() + "divisione/"+divisione.id)
 
   }
 

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import static acambieri.sanbernardo.gestionegare.JwtUtils.generateToken;
 
 @RestController
+@RequestMapping("/api/auth")
 public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -29,7 +30,7 @@ public class AuthController {
     @Value("${token.validity.seconds}")
     private Long tokenValidity;
 
-    @PostMapping(value = "/auth")
+    @PostMapping
     @HidePassword
     public ResponseEntity<AuthResponse> createAuthenticationToken(@RequestBody AuthRequest authenticationRequest) {
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());

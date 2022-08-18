@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
-@RequestMapping("/gare")
+@RequestMapping("/api/gare")
 public class GareController {
     
     @Autowired
@@ -83,8 +83,6 @@ public class GareController {
         return service.getAnnoSocietario();
     }
 
-    @RequestMapping(value = "/getDivisioni")
-    public List<Divisione> getDivisioni(){return service.getDivisioni();}
 
     @PostMapping(value = "/getClassifiche")
     public List<ClassificaPerDivisione> getClassifiche(@RequestBody GaraVO gara){
@@ -115,29 +113,6 @@ public class GareController {
     @GetMapping(value = "/getClassificaFiocchiGruppi")
     public List<ClassificaPerDivisione> getClassificaFiocchiPerGruppi(@RequestParam("anno") int anno){
         return service.getClassificaFiocchiPerGruppi(anno);
-    }
-
-    @Transactional
-    @Secured({"ROLE_ADMIN"})
-    @PostMapping(value = "/divisioni/add")
-    public Divisione createDivisione(@RequestBody Divisione divisione){
-        return service.saveDivisione(divisione);
-    }
-
-    @Transactional
-    @Secured({"ROLE_ADMIN"})
-    @PostMapping(value = "/divisioni/delete")
-    public Boolean deleteDivisione(@RequestBody Divisione divisione){
-        service.deleteDivisione(divisione);
-        return true;
-    }
-
-    @Transactional
-    @Secured({"ROLE_ADMIN","ROLE_EDIT"})
-    @PostMapping(value = "/divisioni/update")
-    public Boolean updateDivisione(@RequestBody Divisione divisione){
-        service.saveDivisione(divisione);
-        return true;
     }
 
     @PostMapping(value = "/backup")
