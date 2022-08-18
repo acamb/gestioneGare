@@ -10,18 +10,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@Transactional
 public class DivisioneService {
 
     @Autowired
     DivisioneRepository repository;
 
 
-    @Transactional
     public void deleteDivisione(Long id){
         repository.deleteById(id);
     }
 
-    @Transactional
     public Divisione saveDivisione(Divisione divisione){
         return repository.save(divisione);
     }
