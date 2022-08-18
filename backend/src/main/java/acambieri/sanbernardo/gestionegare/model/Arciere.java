@@ -1,21 +1,28 @@
 package acambieri.sanbernardo.gestionegare.model;
 
 
+import acambieri.sanbernardo.gestionegare.mappers.Mapped;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "ARCIERI")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Arciere {
+    @Mapped
     protected String nome;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Mapped
     protected Long id;
 
+    @Mapped
     protected String cognome;
+    @Mapped
     protected String sesso;
 
     @ManyToOne
+    @Mapped
     protected Divisione divisione;
 
     public String getSesso() {

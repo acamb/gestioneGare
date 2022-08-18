@@ -1,5 +1,6 @@
 package acambieri.sanbernardo.gestionegare.model;
 
+import acambieri.sanbernardo.gestionegare.mappers.Mapped;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -16,20 +17,29 @@ import static javax.persistence.CascadeType.*;
 public class Gara {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Mapped
     protected Long id;
+    @Mapped
     protected String nome;
+    @Mapped
     protected int annoSocietario;
     @ManyToMany(cascade = MERGE)
     @JoinColumn(name = "ID_GARA",table = "GARE_TIPI_GARA")
+    @Mapped
     protected Set<TipoGara> tipiGara;
     @ManyToMany
     @JoinColumn(name = "ID_GARA",table = "DIVISIONI_GARA")
+    @Mapped
     protected Set<Divisione> divisioni;
+    @Mapped
     protected boolean completata;
+    @Mapped
     protected int punteggioMassimo;
     @OneToMany(mappedBy = "gara")
+    @Mapped
     protected List<Partecipazione> partecipazioni = new ArrayList<>();
     @ManyToOne
+    @Mapped
     protected TemplateGara templateGara;
 
     public int getPunteggioMassimo() {

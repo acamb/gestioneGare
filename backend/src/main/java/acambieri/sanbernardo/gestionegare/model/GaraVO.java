@@ -1,60 +1,65 @@
 package acambieri.sanbernardo.gestionegare.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Transient;
+import acambieri.sanbernardo.gestionegare.mappers.ArciereVOMapper;
+import acambieri.sanbernardo.gestionegare.mappers.Mapped;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
-@Entity
-public class GaraVO extends Gara {
-    @Transient
+
+public class GaraVO{
+    @Mapped
+    protected Long id;
+    @Mapped
+    protected String nome;
+    @Mapped
+    protected int annoSocietario;
+    @Mapped
+    protected Set<TipoGara> tipiGara;
+    @Mapped
+    protected Set<Divisione> divisioni;
+    @Mapped
+    protected boolean completata;
+    @Mapped
+    protected int punteggioMassimo;
+
+    @Mapped
+    protected List<Partecipazione> partecipazioni = new ArrayList<>();
+    @Mapped
+    protected TemplateGara templateGara;
     private List<ArciereVO> gruppoA1;
-    @Transient
     private List<ArciereVO> gruppoB1;
-    @Transient
     private List<ArciereVO> gruppoA2;
-    @Transient
     private List<ArciereVO> gruppoB2;
 
     public GaraVO(){
-        super();
         gruppoA1=new ArrayList<>();
         gruppoB1=new ArrayList<>();
         gruppoA2=new ArrayList<>();
         gruppoB2=new ArrayList<>();
     }
 
-    public GaraVO(Gara gara){
-        this();
-        this.id = gara.id;
-        this.nome = gara.nome;
-        this.annoSocietario = gara.annoSocietario;
-        this.tipiGara = gara.tipiGara;
-        this.divisioni = gara.divisioni;
-        this.punteggioMassimo = gara.punteggioMassimo;
-        this.completata = gara.completata;
-        this.templateGara = gara.templateGara;
-    }
-
-    public GaraVO(Gara gara,List<Partecipazione> conf){
-        this(gara);
+    public void createGruppi(List<Partecipazione> conf){
+        ArciereVOMapper arciereMapper = new ArciereVOMapper();
         conf.stream().forEach(configurazione -> {
-            ArciereVO arciere = new ArciereVO(configurazione.getArciere());
+            ArciereVO arciere = new ArciereVO();
+            arciereMapper.toDto(configurazione.getArciere(),arciere);
             arciere.setPunteggio(configurazione.getPunteggio());
-            //TODO[AC] risalgono nell'ordine giusto?
             arciere.setPunteggi(configurazione.getPunteggi());
             arciere.setDivisione(configurazione.getDivisione());
             switch(configurazione.getGruppo()){
-                case "A":
-                case "A1": gruppoA1.add(arciere);
-                          break;
+                case "A","A1":
+                    gruppoA1.add(arciere);
+                    break;
                 case "A2":gruppoA2.add(arciere);
-                            break;
-                case "B":
-                case "B1": gruppoB1.add(arciere);
-                            break;
+                    break;
+                case "B","B1":
+                    gruppoB1.add(arciere);
+                    break;
                 case "B2": gruppoB2.add(arciere);
+                    break;
+                default:
+                    throw new RuntimeException("Gruppo non valido");
             }
         });
     }
@@ -89,5 +94,77 @@ public class GaraVO extends Gara {
 
     public void setGruppoB2(List<ArciereVO> gruppoB2) {
         this.gruppoB2 = gruppoB2;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public int getAnnoSocietario() {
+        return annoSocietario;
+    }
+
+    public void setAnnoSocietario(int annoSocietario) {
+        this.annoSocietario = annoSocietario;
+    }
+
+    public Set<TipoGara> getTipiGara() {
+        return tipiGara;
+    }
+
+    public void setTipiGara(Set<TipoGara> tipiGara) {
+        this.tipiGara = tipiGara;
+    }
+
+    public Set<Divisione> getDivisioni() {
+        return divisioni;
+    }
+
+    public void setDivisioni(Set<Divisione> divisioni) {
+        this.divisioni = divisioni;
+    }
+
+    public boolean isCompletata() {
+        return completata;
+    }
+
+    public void setCompletata(boolean completata) {
+        this.completata = completata;
+    }
+
+    public int getPunteggioMassimo() {
+        return punteggioMassimo;
+    }
+
+    public void setPunteggioMassimo(int punteggioMassimo) {
+        this.punteggioMassimo = punteggioMassimo;
+    }
+
+    public List<Partecipazione> getPartecipazioni() {
+        return partecipazioni;
+    }
+
+    public void setPartecipazioni(List<Partecipazione> partecipazioni) {
+        this.partecipazioni = partecipazioni;
+    }
+
+    public TemplateGara getTemplateGara() {
+        return templateGara;
+    }
+
+    public void setTemplateGara(TemplateGara templateGara) {
+        this.templateGara = templateGara;
     }
 }

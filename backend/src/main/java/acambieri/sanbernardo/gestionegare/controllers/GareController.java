@@ -1,5 +1,6 @@
 package acambieri.sanbernardo.gestionegare.controllers;
 
+import acambieri.sanbernardo.gestionegare.mappers.GaraVOMapper;
 import acambieri.sanbernardo.gestionegare.model.*;
 import acambieri.sanbernardo.gestionegare.services.GareService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,20 +17,23 @@ public class GareController {
     @Autowired
     private GareService service;
 
+
+    final GaraVOMapper mapper = new GaraVOMapper();
+
     @Transactional
     @Secured({"ROLE_ADMIN","ROLE_EDIT"})
     @PostMapping(value="/salva")
     public GaraVO salvaGara(@RequestBody GaraVO gara){
-        service.salvaGara(gara);
-        return service.getGara(gara);
+        gara = service.salvaGara(gara);
+        return service.getGara(mapper.toEntity(gara));
     }
 
     @Transactional
     @Secured({"ROLE_ADMIN","ROLE_EDIT"})
     @PostMapping(value="/update")
     public GaraVO updateGara(@RequestBody GaraVO gara){
-        service.salvaGara(gara);
-        return service.getGara(gara);
+        gara = service.salvaGara(gara);
+        return service.getGara(mapper.toEntity(gara));
     }
     
     @RequestMapping(value = "/getGare")

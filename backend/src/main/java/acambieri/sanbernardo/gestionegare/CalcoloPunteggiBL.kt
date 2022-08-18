@@ -1,20 +1,19 @@
 package acambieri.sanbernardo.gestionegare
 
+import acambieri.sanbernardo.gestionegare.mappers.ArciereVOMapper
 import acambieri.sanbernardo.gestionegare.model.*
 import java.math.BigDecimal
 
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.function.BinaryOperator
-import kotlin.streams.toList
 
 object CalcoloPunteggiBL {
 
-    //TODO[AC] provare che dopo la modifica la classifica sia coerente e che  a parita' di posizioni(ascending) guardi la sommaPuntiNormalizzata (descending)
-
-    val sommaPuntiNormalizzatiExpr = { punteggi :HashMap<ArciereVO, StatisticheTorneo>, gara : Gara, partecipazione: Partecipazione, index: Int -> (BigDecimal(partecipazione.punteggio).multiply(BigDecimal(600)).divide(BigDecimal(gara.punteggioMassimo)))}
+    val arciereMapper = ArciereVOMapper();
+    val sommaPuntiNormalizzatiExpr = { punteggi :HashMap<ArciereVO, StatisticheTorneo>, gara : Gara, partecipazione: Partecipazione, _: Int -> (BigDecimal(partecipazione.punteggio).multiply(BigDecimal(600)).divide(BigDecimal(gara.punteggioMassimo)))}
     val sommaPosizioniExpr = { punteggi :HashMap<ArciereVO, StatisticheTorneo>, gara : Gara, partecipazione: Partecipazione, index: Int->
-        punteggi[partecipazione.arciere]!!.punteggi.add(BigDecimal(index))
+        punteggi[arciereMapper.toDto(partecipazione.arciere)]!!.punteggi.add(BigDecimal(index))
     }
 
     fun calcolaClassificaTorneoSuPunti(gareTorneo: List<Gara>, gruppi: Boolean): List<ClassificaPerDivisione> {
@@ -22,7 +21,7 @@ object CalcoloPunteggiBL {
                 gruppi,
                 {punti -> Math.round(punti!!.sortedDescending().stream()!!.limit(3).reduce(BinaryOperator<BigDecimal> { a, b -> a.add(b) }).get().toDouble()).toInt()},
                 // punti : puntiMassimiGara = x : 600
-                { punteggi,g,c,index: Int ->  punteggi[c.arciere]!!.punteggi.add(sommaPuntiNormalizzatiExpr(punteggi,g,c,index)) }
+                { punteggi,g,c,index: Int ->  punteggi[arciereMapper.toDto(c.arciere)]!!.punteggi.add(sommaPuntiNormalizzatiExpr(punteggi,g,c,index)) }
             )
     }
 
@@ -39,7 +38,7 @@ object CalcoloPunteggiBL {
                  fun(punteggi,g,c,index) {
 
                     sommaPosizioniExpr(punteggi,g,c,index);
-                    punteggi[c.arciere]!!.sommaNormalizzata = punteggi[c.arciere]!!.sommaNormalizzata.add(sommaPuntiNormalizzatiExpr(punteggi,g,c,index))
+                    punteggi[arciereMapper.toDto(c.arciere)]!!.sommaNormalizzata = punteggi[arciereMapper.toDto(c.arciere)]!!.sommaNormalizzata.add(sommaPuntiNormalizzatiExpr(punteggi,g,c,index))
                     }
 
                 ,
@@ -53,31 +52,43 @@ object CalcoloPunteggiBL {
                           sortingClassificaComparator: Comparator<in ArciereVO> = compareByDescending {  it.punteggio }): List<ClassificaPerDivisione>{
         val punteggi = HashMap<ArciereVO, StatisticheTorneo>()
         val classifiche = ArrayList<ClassificaPerDivisione>()
+        val arciereMapper = ArciereVOMapper();
         for (g in gareTorneo) {
             //Il dao fornisce una lista ordinata per divisione,punti mentre a noi servono i punti
             val confGare = g.partecipazioni.stream().sorted { o1, o2 -> o2.punteggio - o1.punteggio  }.toList()
             //per ogni gara prendo il punteggio dell'arciere
-            confGare.forEachIndexed({ index: Int,c : Partecipazione ->
-                if (!punteggi.containsKey(c.arciere)) {
+            confGare.forEachIndexed { index: Int, c: Partecipazione ->
+                if (!punteggi.containsKey(arciereMapper.toDto(c.arciere))) {
                     if (gruppi) {
-                        val arciereVO = ArciereVO(c)
+                        val arciereVO = ArciereVO()
+                        arciereMapper.toDto(c.arciere,arciereVO)
+                        arciereVO.createPunteggi(c);
                         arciereVO.divisione = Divisione()
-                        /*arciereVO.divisione.id = (if ("A" == c.gruppo) -1 else -2).toLong()
-                        arciereVO.divisione.descrizione = if ("A" == c.gruppo) "Gruppo A" else "Gruppo B"*/
-                        when{
-                            "A" == c.gruppo || "A1" == c.gruppo  || "A2" == c.gruppo-> { arciereVO.divisione.id = -1 ; arciereVO.divisione.descrizione = "Gruppo A"}
-                            !c.isEscludiClassifica && (c.gruppo== "B" || c.gruppo== "B1" || c.gruppo== "B2") -> { arciereVO.divisione.id = -2 ; arciereVO.divisione.descrizione = "Gruppo B"}
-                            c.isEscludiClassifica -> { arciereVO.divisione.id = -3 ; arciereVO.divisione.descrizione = "Gruppo G"}
+                        when {
+                            "A" == c.gruppo || "A1" == c.gruppo || "A2" == c.gruppo -> {
+                                arciereVO.divisione.id = -1; arciereVO.divisione.descrizione = "Gruppo A"
+                            }
+
+                            !c.isEscludiClassifica && (c.gruppo == "B" || c.gruppo == "B1" || c.gruppo == "B2") -> {
+                                arciereVO.divisione.id = -2; arciereVO.divisione.descrizione = "Gruppo B"
+                            }
+
+                            c.isEscludiClassifica -> {
+                                arciereVO.divisione.id = -3; arciereVO.divisione.descrizione = "Gruppo G"
+                            }
 
                         }
-                        punteggi.put(arciereVO, StatisticheTorneo())
+                        punteggi[arciereVO] = StatisticheTorneo()
                     } else {
-                        punteggi.put(ArciereVO(c), StatisticheTorneo())
+                        val arciereVO = ArciereVO()
+                        arciereMapper.toDto(c.arciere,arciereVO)
+                        arciereVO.createPunteggi(c);
+                        punteggi[arciereVO] = StatisticheTorneo()
                     }
                 }
                 //a seconda del metodo per calcolare la classifica calcolo il singolo punteggio
-                calcoloSingoloPunteggioExpr(punteggi,g,c,index+1)
-            })
+                calcoloSingoloPunteggioExpr(punteggi, g, c, index + 1)
+            }
         }
         //prendo le migliori 3 gare per ciascuno
         for (arciere in punteggi.keys) {
@@ -89,7 +100,7 @@ object CalcoloPunteggiBL {
             } else {
                 classifica = classifiche[classifiche.indexOf(classifica)]
             }
-            val punteggio3gare = ArciereVO(arciere)
+            val punteggio3gare = arciere
             val punti = punteggi[punteggio3gare]!!.getPunteggi()
             //calcolo il punteggio totale delle 3 gare
             punteggio3gare.punteggio = sommaPuntiExpr(punti)
@@ -97,7 +108,7 @@ object CalcoloPunteggiBL {
             classifica.arcieri.add(punteggio3gare)
         }
 
-        classifiche.sortWith(compareBy({it.divisione.descrizione}))
+        classifiche.sortWith(compareBy { it.divisione.descrizione })
         classifiche.stream().forEach { classifica -> classifica.arcieri.sortWith(sortingClassificaComparator) }
         return classifiche
     }
@@ -105,8 +116,11 @@ object CalcoloPunteggiBL {
     fun calcolaClassificaGaraScontriPerGruppi(gara: Gara): List<ClassificaPerDivisione> {
         val classifiche = ArrayList<ClassificaPerDivisione>()
         val confGare = gara.partecipazioni.stream().sorted { o1, o2 -> o2.punteggio - o1.punteggio  }.toList()
+        val arciereMapper = ArciereVOMapper();
         for(conf in confGare){
-            val arciere = ArciereVO(conf)
+            val arciere = ArciereVO()
+            arciereMapper.toDto(conf.arciere,arciere)
+            arciere.createPunteggi(conf);
             arciere.divisione = Divisione()
             when {
                 conf.gruppo == "A1" && conf.gara.tipiGara.any { tipo -> tipo.id != 3L && tipo.id !=4L } -> {

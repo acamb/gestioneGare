@@ -1,22 +1,32 @@
 package acambieri.sanbernardo.gestionegare.model;
 
+import acambieri.sanbernardo.gestionegare.mappers.Mapped;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import javax.persistence.Entity;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
-@Entity
-public class ArciereVO extends Arciere{
+public class ArciereVO{
 
-    @Transient
+    @Mapped
+    private String nome;
+    @Mapped
+    private Long id;
+
+    @Mapped
+    private String cognome;
+    @Mapped
+    private String sesso;
+
+    @Mapped
+    private Divisione divisione;
+
     private int punteggio;
-    @Transient
     private List<Punteggio> punteggi=new ArrayList<>();
-    @Transient
     private BigDecimal sommaPuntiNormalizzata;
-    @Transient
     private boolean escludiClassifica;
 
     public ArciereVO(){
@@ -31,14 +41,7 @@ public class ArciereVO extends Arciere{
         this.escludiClassifica = escludiClassifica;
     }
 
-    public ArciereVO(Arciere arciere){
-        this.cognome = arciere.cognome;
-        this.nome = arciere.nome;
-        this.id = arciere.id;
-    }
-
-    public ArciereVO(Partecipazione conf){
-        this(conf.getArciere());
+    public void createPunteggi(Partecipazione conf){
         this.punteggio = conf.getPunteggio();
         this.divisione = conf.getDivisione();
         this.punteggi = conf.getPunteggi();
@@ -64,16 +67,14 @@ public class ArciereVO extends Arciere{
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || ! (o instanceof Arciere)) return false;
-
-        Arciere arciere = (Arciere) o;
-
-        return id == arciere.id;
+        if (o == null || getClass() != o.getClass()) return false;
+        ArciereVO arciereVO = (ArciereVO) o;
+        return Objects.equals(id, arciereVO.id);
     }
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return Objects.hash(id);
     }
 
     public List<Punteggio> getPunteggi() {
@@ -84,6 +85,45 @@ public class ArciereVO extends Arciere{
         this.punteggi = punteggi;
     }
 
-    
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getCognome() {
+        return cognome;
+    }
+
+    public void setCognome(String cognome) {
+        this.cognome = cognome;
+    }
+
+    public String getSesso() {
+        return sesso;
+    }
+
+    public void setSesso(String sesso) {
+        this.sesso = sesso;
+    }
+
+    public Divisione getDivisione() {
+        return divisione;
+    }
+
+    public void setDivisione(Divisione divisione) {
+        this.divisione = divisione;
+    }
+
 
 }

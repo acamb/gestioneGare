@@ -1,6 +1,8 @@
 package acambieri.sanbernardo.gestionegare.services;
 
 import acambieri.sanbernardo.gestionegare.CalcoloPunteggiBL;
+import acambieri.sanbernardo.gestionegare.mappers.ArciereVOMapper;
+import acambieri.sanbernardo.gestionegare.mappers.GaraVOMapper;
 import acambieri.sanbernardo.gestionegare.model.*;
 import acambieri.sanbernardo.gestionegare.repositories.*;
 import org.hibernate.Hibernate;
@@ -50,9 +52,12 @@ public class GareService {
         if(hasPartecipazioni){
             partecipazioneRepository.deleteAllByGaraId(saved.getId());
             saved.setPartecipazioni(new ArrayList<>());
+            gara.setPartecipazioni(new ArrayList<>());
             garaRepository.save(saved);
         }
-        final Gara savedWithPartecipazioni = garaRepository.save(gara);
+        GaraVOMapper mapper = new GaraVOMapper();
+        Gara garaEntity = mapper.toEntity(gara);
+        final Gara savedWithPartecipazioni = garaRepository.save(garaEntity);
         creaPartecipazioni(gara);
         gara.getPartecipazioni()
                 .stream()
@@ -66,33 +71,39 @@ public class GareService {
                 });
         savedWithPartecipazioni.setPartecipazioni(gara.getPartecipazioni());
         saved=garaRepository.save(savedWithPartecipazioni);
-        return new GaraVO(saved,saved.getPartecipazioni());
+        GaraVO garaDto = mapper.toDto(saved);
+        garaDto.createGruppi(saved.getPartecipazioni());
+        return garaDto;
     }
 
     private void creaPartecipazioni(GaraVO gara){
-        gara.getPartecipazioni().addAll(creaPartecipazioniGruppo(gara,gara.getGruppoA1(),"A1"));
-        gara.getPartecipazioni().addAll(creaPartecipazioniGruppo(gara,gara.getGruppoA2(),"A2"));
-        gara.getPartecipazioni().addAll(creaPartecipazioniGruppo(gara,gara.getGruppoB1(),"B1"));
-        gara.getPartecipazioni().addAll(creaPartecipazioniGruppo(gara,gara.getGruppoB2(),"B2"));
+        Gara garaEntity = new GaraVOMapper().toEntity(gara);
+        gara.getPartecipazioni().addAll(creaPartecipazioniGruppo(garaEntity,gara.getGruppoA1(),"A1"));
+        gara.getPartecipazioni().addAll(creaPartecipazioniGruppo(garaEntity,gara.getGruppoA2(),"A2"));
+        gara.getPartecipazioni().addAll(creaPartecipazioniGruppo(garaEntity,gara.getGruppoB1(),"B1"));
+        gara.getPartecipazioni().addAll(creaPartecipazioniGruppo(garaEntity,gara.getGruppoB2(),"B2"));
     }
 
     private List<Partecipazione> creaPartecipazioniGruppo(Gara gara,List<ArciereVO> arcieri,String gruppo){
         List<Partecipazione> partecipazioni = new ArrayList<>();
+        ArciereVOMapper arciereMapper = new ArciereVOMapper();
         arcieri.forEach(arciere -> {
+                Arciere arciereEntity = new Arciere();
+                arciereMapper.toEntity(arciere,arciereEntity);
                 Partecipazione partecipazione = new Partecipazione()
-                .setArciere(arciere)
+                .setArciere(arciereEntity)
                 .setDivisione(arciere.getDivisione())
                 .setGara(gara)
                 .setEscludiClassifica(arciere.isEscludiClassifica())
                 .setGruppo(gruppo)
                 .setPunteggio(arciere.getPunteggio());
-                partecipazione.setPunteggi(arciere.getPunteggi()
-                                .stream()
-                                .map(p -> p.setPartecipazione(partecipazione)
-                                           .setTemplatePunteggio(gara.getTemplateGara().getTemplatePunti().get(
-                                                arciere.getPunteggi().indexOf(p)
-                                                                 ))
-                                ).toList());
+                partecipazione.setPunteggi(arciere.getPunteggi());
+                for(Punteggio p : partecipazione.getPunteggi()){
+                    p.setPartecipazione(partecipazione)
+                            .setTemplatePunteggio(gara.getTemplateGara().getTemplatePunti().get(
+                                    arciere.getPunteggi().indexOf(p)
+                            ));
+                }
                 for(int i = partecipazione.getPunteggi().size();i<gara.getTemplateGara().getPunteggi();i++){
                     partecipazione.getPunteggi().add(new Punteggio()
                             .setPunteggio(0)
@@ -107,7 +118,10 @@ public class GareService {
 
     public GaraVO getGara(Gara gara){
         Gara saved = garaRepository.findById(gara.getId()).orElseThrow();
-        return new GaraVO(saved,saved.getPartecipazioni());
+        GaraVO garaDto = new GaraVO();
+        new GaraVOMapper().toDto(saved,garaDto);
+        garaDto.createGruppi(saved.getPartecipazioni());
+        return garaDto;
     }
 
     public List<Gara> getGare(Integer anno){
@@ -140,7 +154,10 @@ public class GareService {
                 });
         garaRepository.setCompletata(gara.getId());
         Gara saved = garaRepository.findById(gara.getId()).orElseThrow();
-        return new GaraVO(saved,saved.getPartecipazioni());
+        GaraVO garaDto = new GaraVO();
+        new GaraVOMapper().toDto(saved,garaDto);
+        garaDto.createGruppi(saved.getPartecipazioni());
+        return garaDto;
     }
 
     public List<Arciere> getArcieri(){
@@ -207,11 +224,15 @@ public class GareService {
     private List<ClassificaPerDivisione> parseConfGara(List<Partecipazione> list){
         Map<Divisione,List<ArciereVO>> map = new HashMap<>();
         List<ClassificaPerDivisione> result = new ArrayList<>();
+        ArciereVOMapper arciereMapper = new ArciereVOMapper();
         for(Partecipazione partecipazione : list){
             if(!map.containsKey(partecipazione.getDivisione())){
                 map.put(partecipazione.getDivisione(),new ArrayList<>());
             }
-            map.get(partecipazione.getDivisione()).add(new ArciereVO(partecipazione));
+            ArciereVO arciereVO = new ArciereVO();
+            arciereMapper.toDto(partecipazione.getArciere(),arciereVO);
+            arciereVO.createPunteggi(partecipazione);
+            map.get(partecipazione.getDivisione()).add(arciereVO);
         }
         List<Divisione> keyset = new ArrayList<>(map.keySet());
         keyset.sort((o1, o2) -> o1.getDescrizione().compareTo(o2.getDescrizione()));

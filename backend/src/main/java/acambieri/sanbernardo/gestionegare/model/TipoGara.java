@@ -1,12 +1,6 @@
 package acambieri.sanbernardo.gestionegare.model;
 
-import org.hibernate.annotations.Fetch;
-
 import javax.persistence.*;
-
-import java.util.List;
-
-import static javax.persistence.CascadeType.*;
 
 @Entity
 @Table(name="TIPI_GARA")
@@ -16,9 +10,6 @@ public class TipoGara {
     private Long id;
     private String nome;
     private String descrizione;
-    /*@ManyToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TIPI_GARA_ID",table = "GARE_TIPI_GARA")
-    public List<Gara> gare;*/
 
     public Long getId() {
         return id;

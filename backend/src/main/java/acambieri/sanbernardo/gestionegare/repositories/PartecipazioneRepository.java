@@ -21,6 +21,6 @@ public interface PartecipazioneRepository extends CrudRepository<Partecipazione,
     List<Partecipazione> getByGaraId(long idGara);
 
     List<Partecipazione> getByGaraId(long idGara,Sort sort);
-
+    @Modifying(flushAutomatically = true,clearAutomatically = true)
     void deleteAllByGaraId(long idGara);
 }

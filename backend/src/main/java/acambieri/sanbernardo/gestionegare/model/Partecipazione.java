@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.persistence.*;
 
-import static javax.persistence.CascadeType.*;
-
 
 @Entity
 public class Partecipazione {

@@ -29,8 +29,8 @@ public class ClassificaPerDivisione {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof ClassificaPerDivisione) {
-            return divisione.getId() == ((ClassificaPerDivisione)obj).getDivisione().getId();
+        if(obj instanceof ClassificaPerDivisione classifica) {
+            return divisione.getId().equals(classifica.getDivisione().getId());
         }
         else{
             return false;
