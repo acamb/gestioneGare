@@ -31,7 +31,7 @@ export class GareService {
 
 
   getArcieri(): Observable<Array<Arciere>> {
-     return this.http.get<Array<Arciere>>(getServer() + "gare/getArcieri")
+     return this.http.get<Array<Arciere>>(getServer() + "arciere/")
 
   }
 

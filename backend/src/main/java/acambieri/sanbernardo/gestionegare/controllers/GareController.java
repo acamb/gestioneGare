@@ -6,8 +6,6 @@ import acambieri.sanbernardo.gestionegare.services.GareService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
-
-import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
@@ -64,10 +62,7 @@ public class GareController {
         return service.salvaClassifica(gara);
     }
     
-    @RequestMapping(value="/getArcieri")
-    public List<Arciere> getArcieri(){
-        return service.getArcieri();
-    }
+    
 
     @RequestMapping(value="/getTipi")
     public List<TipoGara> getTipiGara(){

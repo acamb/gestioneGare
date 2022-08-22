@@ -160,11 +160,6 @@ public class GareService {
         return garaDto;
     }
 
-    public List<Arciere> getArcieri(){
-        List<Arciere> result = new ArrayList<>();
-        arciereRepository.findAll().forEach(result::add);
-        return result;
-    }
 
     public List<TipoGara> getTipiGara(){
         List<TipoGara> result = new ArrayList<>();
