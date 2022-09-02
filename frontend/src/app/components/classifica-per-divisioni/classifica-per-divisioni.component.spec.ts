@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ClassificaPerDivisioniComponent } from './classifica-per-divisioni.component';
 
@@ -6,7 +6,7 @@ describe('ClassificaPerDivisioniComponent', () => {
   let component: ClassificaPerDivisioniComponent;
   let fixture: ComponentFixture<ClassificaPerDivisioniComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ClassificaPerDivisioniComponent ]
     })

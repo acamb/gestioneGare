@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ArcieriPickerComponent } from './arcieri-picker.component';
 
@@ -6,7 +6,7 @@ describe('ArcieriPickerComponent', () => {
   let component: ArcieriPickerComponent;
   let fixture: ComponentFixture<ArcieriPickerComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ArcieriPickerComponent ]
     })

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { LegendaClassificaComponent } from './legenda-classifica.component';
 
@@ -6,7 +6,7 @@ describe('LegendaClassificaComponent', () => {
   let component: LegendaClassificaComponent;
   let fixture: ComponentFixture<LegendaClassificaComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ LegendaClassificaComponent ]
     })
