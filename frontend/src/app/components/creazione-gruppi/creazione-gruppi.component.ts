@@ -25,13 +25,13 @@ export class CreazioneGruppiComponent implements OnInit {
   @Input()
   gara : Gara;
 
-  @ViewChild('gruppo', { static: false })
+  @ViewChild('gruppo')
   gruppoSingolo : GruppiComponent;
 
-  @ViewChild('gruppo1', { static: false })
+  @ViewChild('gruppo1')
   gruppoUno : GruppiComponent;
 
-  @ViewChild('gruppo2', { static: false })
+  @ViewChild('gruppo2')
   gruppoDue : GruppiComponent;
 
   constructor() { }
