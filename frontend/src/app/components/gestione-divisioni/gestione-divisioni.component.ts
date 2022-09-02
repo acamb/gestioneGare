@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Divisione} from "../../model/Divisione";
-import {Observable} from "rxjs/Observable";
+import {Observable} from "rxjs";
 import {GareService} from "../../gare.service";
 
 @Component({

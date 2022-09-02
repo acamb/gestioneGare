@@ -1,3 +1,5 @@
+
+import {take, map} from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import {AuthenticationService} from "../../authentication.service";
@@ -22,14 +24,14 @@ export class HomeComponent implements OnInit {
   }
 
   onSubmit(){
-    this.authService.authenticate(this.username,this.password).map(result => {
+    this.authService.authenticate(this.username,this.password).pipe(map(result => {
       if(result){
         this.router.navigateByUrl("/gestioneGare")
       }
       else{
         this.wrongLogin=true;
       }
-    }).take(1).subscribe();
+    }),take(1),).subscribe();
   }
 
 }

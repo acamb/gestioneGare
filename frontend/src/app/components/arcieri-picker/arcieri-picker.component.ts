@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Arciere} from "../../model/Arciere";
-import {Subject} from "rxjs/Subject";
+import {Subject} from "rxjs";
 import {TipoGara} from "../../model/TipoGara";
 import {TranslateService} from "@ngx-translate/core";
 

@@ -1,8 +1,10 @@
+
+import {take, map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import {Arciere} from "./model/Arciere";
 import {TipoGara} from "./model/TipoGara";
 import {Gara, TemplateGara} from "./model/Gara";
-import {Observable} from "rxjs/Observable";
+import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 
 import {Divisione} from "./model/Divisione";
@@ -23,9 +25,9 @@ export class GareService {
   }
 
   initTipi(){
-    this.getTipiGara().map(
+    this.getTipiGara().pipe(map(
       tipi => tipi.forEach(tipo => this.mapTipi.set(tipo.nome,tipo))
-    ).take(1).subscribe();
+    ),take(1),).subscribe();
   }
 
 
@@ -154,8 +156,8 @@ export class GareService {
   }
 
   duplicaGruppiGara(gara: Gara) : Observable<GruppiContainer> {
-    return this.getGara(gara)
-      .map( g => {return {gruppoA1 : g.gruppoA1, gruppoB1: g.gruppoB1,gruppoA2 : g.gruppoA2, gruppoB2: g.gruppoB2} });
+    return this.getGara(gara).pipe(
+      map( g => {return {gruppoA1 : g.gruppoA1, gruppoB1: g.gruppoB1,gruppoA2 : g.gruppoA2, gruppoB2: g.gruppoB2} }));
   }
 
   isGaraScontri(gara){

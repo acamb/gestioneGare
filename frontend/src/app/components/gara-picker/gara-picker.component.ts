@@ -1,6 +1,6 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {GareService} from "../../gare.service";
-import {Subject} from "rxjs/Subject";
+import {Subject} from "rxjs";
 import {Gara} from "../../model/Gara";
 
 @Component({

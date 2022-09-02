@@ -1,10 +1,11 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {GareService} from './gare.service';
-import {Observable} from 'rxjs/Observable';
+import {Observable,  BehaviorSubject } from 'rxjs';
 import {Router} from '@angular/router';
 import { User } from './model/User';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { getServer } from './Utils';
 import * as jwt_decode from 'jwt-decode'
 
@@ -58,8 +59,8 @@ export class AuthenticationService {
    }
 
   authenticate(username: string, password: string): Observable<boolean>{
-    return this.httpClient.post<AuthResponse>(getServer() + 'auth', {username: username, password: password})
-      .map(resp => {
+    return this.httpClient.post<AuthResponse>(getServer() + 'auth', {username: username, password: password}).pipe(
+      map(resp => {
         if (resp.token === undefined){
           return false;
         }
@@ -69,7 +70,7 @@ export class AuthenticationService {
         return true;
       },error => {
         return false;
-      })
+      }))
   }
 
   goToLogin() {

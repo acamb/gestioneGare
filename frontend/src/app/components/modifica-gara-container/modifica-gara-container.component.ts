@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Gara} from "../../model/Gara";
 import {ActivatedRoute} from "@angular/router";
 import {Arciere} from "../../model/Arciere";
-import {Observable} from "rxjs/Observable";
+import {Observable} from "rxjs";
 import {GareService} from "../../gare.service";
 
 @Component({

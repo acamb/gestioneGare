@@ -2,8 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angula
 import {Divisione} from "../../model/Divisione";
 import {Arciere} from "../../model/Arciere";
 import {GruppiContainer} from "../../model/GruppiContainer";
-import {Observable} from "rxjs/Observable";
-import {Subject} from "rxjs/Subject";
+import {Observable, Subject} from "rxjs";
 import {GruppiComponent} from "../gruppi/gruppi.component";
 import {Gara} from "../../model/Gara";
 

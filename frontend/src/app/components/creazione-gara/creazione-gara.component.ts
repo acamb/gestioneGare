@@ -4,8 +4,8 @@ import {Arciere} from "../../model/Arciere";
 import {GareService} from "../../gare.service";
 import {GruppiContainer} from "../../model/GruppiContainer";
 import {SelectableItem} from "../../model/SelectableItem";
-import {Observable} from "rxjs/Observable";
-import 'rxjs/add/operator/toPromise';
+import {Observable} from "rxjs";
+
 import {Router} from "@angular/router";
 import {Gara, TemplateGara} from "../../model/Gara";
 import {Divisione} from "../../model/Divisione";

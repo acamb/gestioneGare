@@ -6,10 +6,7 @@ import {SortableComponent} from "ngx-bootstrap";
 import {GruppiContainer} from "../../model/GruppiContainer";
 import {Arciere} from "../../model/Arciere";
 import {Divisione} from "../../model/Divisione";
-import {Observable} from "rxjs/Observable";
-import {Observer} from "rxjs/Observer";
-import {Subject} from "rxjs/Subject";
-import {Subscription} from "rxjs/Subscription";
+import {Observable, Observer, Subject, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-gruppi',

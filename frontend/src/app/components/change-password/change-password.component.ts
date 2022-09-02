@@ -1,3 +1,5 @@
+
+import {take} from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import {UsersService} from "../../users.service";
 import {AuthenticationService} from "../../authentication.service";
@@ -25,8 +27,8 @@ export class ChangePasswordComponent implements OnInit {
       this.error="Le password non corrispondono";
       return;
     }
-    this.userService.updatePassword(this.authService.user,this.oldPassword,this.newPassword)
-      .take(1)
+    this.userService.updatePassword(this.authService.user,this.oldPassword,this.newPassword).pipe(
+      take(1))
       .subscribe(
       res => this.successInfo=true,
       error => {this.successInfo=false;this.error="La password attuale non corrisponde, password non aggiornata"}

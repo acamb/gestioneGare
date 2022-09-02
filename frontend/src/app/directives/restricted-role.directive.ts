@@ -2,7 +2,7 @@ import { Directive, Input, ElementRef, ViewContainerRef, TemplateRef, OnInit } f
 import { Role } from '../model/Role';
 import { AuthenticationService } from '../authentication.service';
 import { User } from '../model/User';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Directive({
   selector: '[appRestrictedRoles]'

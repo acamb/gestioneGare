@@ -1,6 +1,6 @@
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from "@angular/router";
 import {Injectable} from "@angular/core";
-import {Observable} from "rxjs/Observable";
+import {Observable} from "rxjs";
 import {Gara} from "../model/Gara";
 import {toNumber} from "ngx-bootstrap/timepicker/timepicker.utils";
 import {GareService} from "../gare.service";
