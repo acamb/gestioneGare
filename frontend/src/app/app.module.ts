@@ -3,10 +3,11 @@ import { NgModule } from '@angular/core';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 import { AppComponent } from './app.component';
-import {
-  AlertModule, BsDropdownModule, ButtonsModule, PaginationModule,
-  TooltipModule
-} from "ngx-bootstrap";
+import { AlertModule } from 'ngx-bootstrap/alert';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { SortableModule } from 'ngx-bootstrap/sortable';
 import {environment} from "../environments/environment";
 import { GruppiComponent } from './components/gruppi/gruppi.component';
