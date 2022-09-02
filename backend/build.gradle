@@ -32,10 +32,11 @@ tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
-task implementationFrontend(type: Exec) {
+task buildFrontend(type: Exec) {
     workingDir '../frontend'
     commandLine 'npm','run',"package"
 }
+
 
 
 
@@ -64,4 +65,14 @@ dependencies {
         exclude(module: 'commons-logging')
     }
     testCompileOnly('org.springframework.security:spring-security-test:5.7.2')
+}
+
+
+processResources{
+    if (gradle.startParameter.taskNames.contains("assemble")) {
+        dependsOn "buildFrontend"
+    }
+    else{
+        println "skipping frontend build"
+    }
 }
