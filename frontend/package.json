@@ -6,10 +6,10 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "package": "ng build --configuration production",
+    "package": "ng build --configuration production --base-href=\"/app/\"",
     "postpackage": "npm run deploy",
-    "predeployP": "rimraf ../backend/src/main/resources/static/ && mkdirp ../../backend/src/main/resources/static",
-    "deploy": "copyfiles -f dist/** ../backend/src/main/resources/static",
+    "predeploy": "rimraf ../backend/src/main/resources/static/ && mkdirp ../backend/src/main/resources/static/app",
+    "deploy": "copyfiles -f dist/** ../backend/src/main/resources/static/app",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
