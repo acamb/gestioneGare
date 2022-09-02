@@ -2,7 +2,7 @@ import {
   Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {SortableComponent} from "ngx-bootstrap";
+import {SortableComponent} from "ngx-bootstrap/sortable";
 import {GruppiContainer} from "../../model/GruppiContainer";
 import {Arciere} from "../../model/Arciere";
 import {Divisione} from "../../model/Divisione";

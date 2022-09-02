@@ -3,7 +3,7 @@ import {ActivatedRoute} from "@angular/router";
 import {Gara} from "../../model/Gara";
 import {Scontro, Turno} from "../../model/Turno";
 import {Arciere, Punteggio} from "../../model/Arciere";
-import {areIterablesEqual} from "@angular/core/src/change_detection/change_detection_util";
+
 
 @Component({
   selector: 'app-gironi',

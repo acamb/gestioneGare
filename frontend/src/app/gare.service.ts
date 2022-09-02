@@ -12,7 +12,7 @@ import {ClassificaPerDivisione} from "./model/ClassifichePerDivisione";
 import {GruppiContainer} from "./model/GruppiContainer";
 import "rxjs/add/operator/switchMap";
 import { getServer } from './Utils';
-import { RequestOptions } from '@angular/http';
+import { RequestOptions } from 'http';
 
 
 @Injectable()
@@ -38,22 +38,22 @@ export class GareService {
   }
 
   salvaGara(gara: Gara) : Observable<Gara>{
-     return this.http.post(getServer() + "gare/salva",gara)
+     return this.http.post<Gara>(getServer() + "gare/salva",gara)
 
   }
 
   updateGara(gara: Gara) : Observable<Gara>{
-    return this.http.post(getServer() + "gare/update",gara)
+    return this.http.post<Gara>(getServer() + "gare/update",gara)
 
   }
 
   getGareCompletateLight(anno,tipo: TipoGara) : Observable<Array<Gara>> {
-    return this.http.get(getServer() + "gare/getGareCompletate?anno="+anno+"&tipo="+tipo.id)
+    return this.http.get<Array<Gara>>(getServer() + "gare/getGareCompletate?anno="+anno+"&tipo="+tipo.id)
 
   }
 
   getGara(gara: Gara) : Observable<Gara>{
-    return this.http.get(getServer() + "gare/getGara?id="+gara.id)
+    return this.http.get<Gara>(getServer() + "gare/getGara?id="+gara.id)
 
   }
 
@@ -64,7 +64,7 @@ export class GareService {
   }
 
   getGare(anno) : Observable<Array<Gara>> {
-      return this.http.get(getServer() + "gare/getGare?anno="+anno)
+      return this.http.get<Array<Gara>>(getServer() + "gare/getGare?anno="+anno)
 
   }
 
@@ -75,27 +75,27 @@ export class GareService {
   }
 
   getAnnoSocietario() : Observable<number>{
-    return this.http.get(getServer() + "gare/getAnnoSocietario")
+    return this.http.get<number>(getServer() + "gare/getAnnoSocietario")
 
   }
 
   getDivisioni(): Observable<Array<Divisione>> {
-    return this.http.get(getServer() + "divisione/")
+    return this.http.get<Array<Divisione>>(getServer() + "divisione/")
 
   }
 
   getClassifichePerDivisione(gara: Gara): Observable<Array<ClassificaPerDivisione>> {
-    return this.http.post(getServer() + "gare/getClassifiche",gara)
+    return this.http.post<Array<ClassificaPerDivisione>>(getServer() + "gare/getClassifiche",gara)
 
   }
 
   getClassificheScontri(gara: Gara): Observable<Array<ClassificaPerDivisione>> {
-    return this.http.post(getServer() + "gare/getClassificheScontri",gara)
+    return this.http.post<Array<ClassificaPerDivisione>>(getServer() + "gare/getClassificheScontri",gara)
 
   }
 
   private getClassificaIndoorPerDivisione(anno: number) : Observable<Array<ClassificaPerDivisione>> {
-    return this.http.get(getServer() + "gare/getClassificaIndoorDivisioni?anno="+anno)
+    return this.http.get<Array<ClassificaPerDivisione>>(getServer() + "gare/getClassificaIndoorDivisioni?anno="+anno)
 
 
   }

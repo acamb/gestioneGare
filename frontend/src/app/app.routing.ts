@@ -143,4 +143,4 @@ const appRoutes: Routes = [
 	...menuRoutes
 ];
 
-export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes, { useHash: true, relativeLinkResolution: 'legacy' });
+export const routing: ModuleWithProviders<RouterModule> = RouterModule.forRoot(appRoutes, { useHash: true, relativeLinkResolution: 'legacy' });

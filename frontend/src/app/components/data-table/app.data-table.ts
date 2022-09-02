@@ -1,6 +1,5 @@
 
 import {Component, Input, OnChanges, SimpleChanges, EventEmitter, Output} from "@angular/core";
-import {forEach} from "@angular/router/src/utils/collection";
 import {TranslateService} from "@ngx-translate/core";
 import {TipoGara} from "../../model/TipoGara";
 @Component({

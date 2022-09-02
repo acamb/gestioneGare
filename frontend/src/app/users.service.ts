@@ -14,11 +14,11 @@ export class UsersService {
   }
 
   listUsers(): Observable<Array<User>>{
-    return this.httpClient.get(getServer()+"users/list");
+    return this.httpClient.get<Array<User>>(getServer()+"users/list");
   }
 
   updatePassword(user: User,oldPassword: string,newPassword: string): Observable<User>{
-    return this.httpClient.put(getServer()+"users/password",{user: user,oldPassword:oldPassword,newPassword: newPassword});
+    return this.httpClient.put<User>(getServer()+"users/password",{user: user,oldPassword:oldPassword,newPassword: newPassword});
   }
 
 }
