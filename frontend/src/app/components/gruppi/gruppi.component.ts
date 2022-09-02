@@ -36,10 +36,10 @@ export class GruppiComponent implements OnInit {
     console.log("breakpoint");
   }
 
-  @ViewChild('gruppoUnoComponent')
+  @ViewChild('gruppoUnoComponent', { static: true })
   sortableComponentUno : SortableComponent;
 
-  @ViewChild('gruppoDueComponent')
+  @ViewChild('gruppoDueComponent', { static: true })
   sortableComponentDue : SortableComponent;
 
 

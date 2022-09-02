@@ -39,7 +39,7 @@ export class CreazioneGaraComponent implements OnInit {
   selectedTemplateGara: TemplateGara;
   divisioneRequired = false;
 
-  @ViewChild('duplicaModal') modal;
+  @ViewChild('duplicaModal', { static: true }) modal;
 
   constructor(private gareService : GareService,private router: Router) {
     this.tipiGara = this.gareService.getTipiGara();
